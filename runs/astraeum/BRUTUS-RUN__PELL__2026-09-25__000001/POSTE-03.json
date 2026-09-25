@@ -1,0 +1,21 @@
+{
+  "finished_at": 1790380187.8576462,
+  "payload": {
+    "algorithm_id": "integer-rational-rouche-countertest-v1",
+    "b4_margin_fraction": "0.07780929093461051160799336641",
+    "candidate_count": 137305,
+    "exact_b4_lt_1": true,
+    "max_abs_p": "0.000006648448903854760654630943677",
+    "pair_zero_free_r4": true,
+    "status": "PASS",
+    "worst_pair": [
+      5,
+      7
+    ]
+  },
+  "role": "COUNTERTEST",
+  "started_at": 1790380171.2443583,
+  "status": "PASS",
+  "worker_id": 3,
+  "worker_name": "POSTE-03"
+}

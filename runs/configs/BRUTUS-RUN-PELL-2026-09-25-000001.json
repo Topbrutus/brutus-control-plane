@@ -1,0 +1,19 @@
+{
+  "run_id": "BRUTUS-RUN://PELL/2026-09-25/000001",
+  "family": "BRUTUS-PELL",
+  "status": "OBSERVATION",
+  "source": {
+    "repo": "Topbrutus/topbrutus_one",
+    "commit": "906e51f97eff3dce53203a8643f996233d825431"
+  },
+  "control_plane": {"repo": "Topbrutus/brutus-control-plane", "version": "0.1.0"},
+  "engine": {"name": "ASTRAEUM", "mode": "five-post-research"},
+  "compute": {"precision": 70, "deterministic": true, "algorithm_id": "connected-spectrum-five-post-v1"},
+  "verification": {"primary": true, "mirror": true, "countertest": true, "precision_audit": true, "independent_algorithm": true},
+  "experiment": {
+    "X": 2000000, "Q": 199, "kmax": 8, "precision": 70,
+    "arbiter_timeout_seconds": 600,
+    "arbiter_relative_tolerance": "1e-45"
+  },
+  "evidence": {}
+}

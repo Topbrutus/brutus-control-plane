@@ -44,3 +44,17 @@ Alias interne historique : `LA_MACHINE_TE_FAIT_CHIER`.
 `python src/brutus_control_plane.py fingerprint examples/job.example.json`
 
 Version initiale : **0.1.0**.
+
+## Premier run ASTRAEUM vérifié
+
+`BRUTUS-RUN://PELL/2026-09-25/000001` est le premier run Brutus-Pell exécuté via l'adaptateur ASTRAEUM à cinq postes.
+
+- X = 2,000,000; Q = 199; précision = 70 chiffres.
+- PRIMARY : agrégation de motifs + polynômes élémentaires.
+- MIRROR : parcours ligne par ligne + identités de Newton + récurrence logarithmique.
+- COUNTERTEST : certificat entier/rationnel de B(4)<1 et des facteurs pairwise.
+- PRECISION : comparaison Decimal / float64.
+- ARBITER : comparaison des traces sans recalcul du résultat principal.
+
+Statut final du control plane : `VERIFIED`.
+Le statut `PROVEN` reste réservé à une preuve dont la portée et les limitations sont explicitement déclarées.

@@ -1,0 +1,38 @@
+{
+  "compute": {
+    "algorithm_id": "connected-spectrum-five-post-v1",
+    "deterministic": true,
+    "precision": 70
+  },
+  "control_plane": {
+    "repo": "Topbrutus/brutus-control-plane",
+    "version": "0.1.0"
+  },
+  "engine": {
+    "mode": "five-post-research",
+    "name": "ASTRAEUM"
+  },
+  "evidence": {},
+  "experiment": {
+    "Q": 199,
+    "X": 2000000,
+    "arbiter_relative_tolerance": "1e-45",
+    "arbiter_timeout_seconds": 600,
+    "kmax": 8,
+    "precision": 70
+  },
+  "family": "BRUTUS-PELL",
+  "run_id": "BRUTUS-RUN://PELL/2026-09-25/000001",
+  "source": {
+    "commit": "906e51f97eff3dce53203a8643f996233d825431",
+    "repo": "Topbrutus/topbrutus_one"
+  },
+  "status": "OBSERVATION",
+  "verification": {
+    "countertest": true,
+    "independent_algorithm": true,
+    "mirror": true,
+    "precision_audit": true,
+    "primary": true
+  }
+}

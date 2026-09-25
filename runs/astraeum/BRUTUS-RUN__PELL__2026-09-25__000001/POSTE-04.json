@@ -1,0 +1,17 @@
+{
+  "finished_at": 1790380188.053297,
+  "payload": {
+    "D_decimal": "6.7409079408606993833973057327091931798649731598198300909013800034775E-7",
+    "D_float64": "6.740911134950114e-07",
+    "algorithm_id": "decimal-vs-float64-audit-v1",
+    "candidate_count": 137305,
+    "precision_wall_detected": true,
+    "relative_delta": "4.738366764001188479453822396164092447849675307299989416795601572378437E-7",
+    "status": "PASS"
+  },
+  "role": "PRECISION",
+  "started_at": 1790380171.2544432,
+  "status": "PASS",
+  "worker_id": 4,
+  "worker_name": "POSTE-04"
+}

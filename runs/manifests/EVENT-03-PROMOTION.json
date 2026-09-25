@@ -1,0 +1,11 @@
+{
+  "event": "PROMOTION_GRANTED",
+  "run_id": "BRUTUS-RUN://PELL/2026-09-25/000001",
+  "source_commit": "906e51f97eff3dce53203a8643f996233d825431",
+  "stage": "TRACE",
+  "worker_id": "POSTE-05",
+  "detail": {
+    "from": "CANDIDATE",
+    "to": "VERIFIED"
+  }
+}

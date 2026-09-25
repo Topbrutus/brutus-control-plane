@@ -1,0 +1,10 @@
+{
+  "event": "PRECISION_WALL",
+  "run_id": "BRUTUS-RUN://PELL/2026-09-25/000001",
+  "source_commit": "906e51f97eff3dce53203a8643f996233d825431",
+  "stage": "PRECISION",
+  "worker_id": "POSTE-04",
+  "detail": {
+    "relative_delta": "4.738366764001188479453822396164092447849675307299989416795601572378437E-7"
+  }
+}

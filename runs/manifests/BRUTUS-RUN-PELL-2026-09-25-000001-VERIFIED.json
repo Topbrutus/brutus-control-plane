@@ -1,0 +1,52 @@
+{
+  "run_id": "BRUTUS-RUN://PELL/2026-09-25/000001",
+  "family": "BRUTUS-PELL",
+  "status": "VERIFIED",
+  "source": {
+    "repo": "Topbrutus/topbrutus_one",
+    "commit": "906e51f97eff3dce53203a8643f996233d825431"
+  },
+  "compute": {
+    "precision": 70,
+    "deterministic": true,
+    "algorithm_id": "connected-spectrum-five-post-v1"
+  },
+  "verification": {
+    "primary": true,
+    "mirror": true,
+    "countertest": true,
+    "precision_audit": true,
+    "independent_algorithm": true
+  },
+  "result": {
+    "candidate_count": 137305,
+    "X": 2000000,
+    "Q": 199,
+    "D": "6.7409079408606993833973057327091931798649731598198300909013795534874E-7",
+    "primary_mirror_relative_D_difference": "6.675511725539807798349253677642986045707405423774055526323159601457360E-62",
+    "exact_b4_lt_1": true,
+    "pair_zero_free_r4": true,
+    "precision_wall_detected": true,
+    "status": "PASS"
+  },
+  "evidence": {
+    "source_commit": "906e51f97eff3dce53203a8643f996233d825431",
+    "input_hash": "ae687b7fb6a309152aff84fb288dbb1912207c36e8022e62654f8abe8d26bf7b",
+    "primary_result": "1078540cdef27dc9a1417369486725180f3640157462ff3b342b7ae3e39c9bf0",
+    "mirror_result": "193da01f83f7f7ef740ee7be47a7ff2d7d5c9455e31114f91fd26d5e31081494",
+    "countertest_result": "5b5339b6cd651a91a37ae0ef91932ff616816709ef044138bfe6eaca01a76231",
+    "precision_result": "9acc670a8ccf3a46263ad69fca492492c1b387aca6c0c449b9c3a5ea38a6ba8d",
+    "reproducibility_pass": "3c45c8e9403b9f552835339fced694ba16745f66fbece9165a0686697474b116",
+    "run_summary": "0a93bb5220328f44733f7b26f888d22e049d2ab199b74d946287293194d93e3a"
+  },
+  "event_chain": [
+    "ea4e28ea969de1d587cef0f7dc714d4582e1a8aaee811c3d462d0d8856f227df",
+    "b0fde911480dadf22195b84270b013dfc047af4d07afbb25303b83817d3811e2",
+    "5d3e3fd9b1769ac011d0c06923419061090eb96c0a7653e0ff3b0c71bbc1a806"
+  ],
+  "limitations": [
+    "This run verifies the finite sample X=2,000,000 and Q=199.",
+    "VERIFIED does not imply a general asymptotic theorem.",
+    "The primary numerical D uses Decimal transcendental logarithms; exact integer countertests cover B4 and pair zero-freeness."
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "event": "PASS",
+  "run_id": "BRUTUS-RUN://PELL/2026-09-25/000001",
+  "source_commit": "906e51f97eff3dce53203a8643f996233d825431",
+  "stage": "TRACE",
+  "worker_id": "POSTE-05",
+  "detail": {
+    "summary_hash": "0a93bb5220328f44733f7b26f888d22e049d2ab199b74d946287293194d93e3a"
+  }
+}

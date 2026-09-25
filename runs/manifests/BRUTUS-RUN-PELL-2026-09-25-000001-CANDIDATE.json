@@ -1,0 +1,29 @@
+{
+  "run_id": "BRUTUS-RUN://PELL/2026-09-25/000001",
+  "family": "BRUTUS-PELL",
+  "status": "CANDIDATE",
+  "source": {
+    "repo": "Topbrutus/topbrutus_one",
+    "commit": "906e51f97eff3dce53203a8643f996233d825431"
+  },
+  "compute": {
+    "precision": 70,
+    "deterministic": true,
+    "algorithm_id": "connected-spectrum-five-post-v1"
+  },
+  "verification": {
+    "primary": true,
+    "mirror": true,
+    "countertest": true,
+    "precision_audit": true,
+    "independent_algorithm": true
+  },
+  "evidence": {
+    "source_commit": "906e51f97eff3dce53203a8643f996233d825431",
+    "input_hash": "ae687b7fb6a309152aff84fb288dbb1912207c36e8022e62654f8abe8d26bf7b",
+    "primary_result": "1078540cdef27dc9a1417369486725180f3640157462ff3b342b7ae3e39c9bf0",
+    "mirror_result": "193da01f83f7f7ef740ee7be47a7ff2d7d5c9455e31114f91fd26d5e31081494",
+    "countertest_result": "5b5339b6cd651a91a37ae0ef91932ff616816709ef044138bfe6eaca01a76231",
+    "reproducibility_pass": "3c45c8e9403b9f552835339fced694ba16745f66fbece9165a0686697474b116"
+  }
+}

@@ -1,8 +1,10 @@
 {
-  "version": "1.0",
+  "version": "1.1",
   "pipeline": "brutus-pell",
   "extends": "research-generic",
   "family": "BRUTUS-PELL",
+  "engine_adapter": "adapters/astraeum/run.py",
+  "research_plugin": "adapters/brutus_pell/connected_spectrum.py",
   "required_checks": [
     "complete_pair_definition",
     "independent_mirror_path",
@@ -11,6 +13,7 @@
     "source_commit_pinned"
   ],
   "default_precision_digits": 70,
+  "verified_run_example": "runs/manifests/BRUTUS-RUN-PELL-2026-09-25-000001-VERIFIED.json",
   "release_requires": [
     "proof_artifact",
     "limitations",
