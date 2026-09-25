@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://brutus.local/schemas/job.schema.json",
+  "title": "Brutus Job Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "run_id",
+    "family",
+    "status",
+    "source",
+    "compute",
+    "verification"
+  ],
+  "properties": {
+    "run_id": {
+      "type": "string",
+      "pattern": "^BRUTUS-RUN://"
+    },
+    "family": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "enum": [
+        "OBSERVATION",
+        "CANDIDATE",
+        "VERIFIED",
+        "PROVEN",
+        "RELEASED"
+      ]
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "repo",
+        "commit"
+      ],
+      "properties": {
+        "repo": {
+          "type": "string"
+        },
+        "commit": {
+          "type": "string",
+          "minLength": 7
+        }
+      },
+      "additionalProperties": true
+    },
+    "compute": {
+      "type": "object",
+      "required": [
+        "deterministic"
+      ],
+      "properties": {
+        "precision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "deterministic": {
+          "type": "boolean"
+        },
+        "algorithm_id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "verification": {
+      "type": "object",
+      "required": [
+        "primary",
+        "mirror",
+        "countertest"
+      ],
+      "properties": {
+        "primary": {
+          "type": "boolean"
+        },
+        "mirror": {
+          "type": "boolean"
+        },
+        "countertest": {
+          "type": "boolean"
+        },
+        "precision_audit": {
+          "type": "boolean"
+        },
+        "independent_algorithm": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": true
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  }
+}

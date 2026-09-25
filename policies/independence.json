@@ -1,0 +1,10 @@
+{
+  "version": "1.0",
+  "rules": [
+    "PRIMARY and MIRROR must not share the same implementation path.",
+    "COUNTERTEST must be able to falsify the candidate.",
+    "PRECISION must change arithmetic or numerical method when auditing precision.",
+    "ARBITER consumes traces and must not author the primary numerical result.",
+    "Every worker records algorithm_id and code_commit."
+  ]
+}

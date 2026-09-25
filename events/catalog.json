@@ -1,0 +1,15 @@
+{
+  "version": "1.0",
+  "events": {
+    "PASS": "All declared invariants passed.",
+    "FAIL": "A declared invariant failed.",
+    "DIVERGENCE": "Independent paths disagree.",
+    "PRECISION_WALL": "Result changes materially with numerical precision.",
+    "TRACE_CRITIQUE_REPRODUCTIBLE": "Failure with enough state to reproduce.",
+    "PROMOTION_BLOCKED": "Required evidence missing.",
+    "PROMOTION_GRANTED": "All policy requirements satisfied."
+  },
+  "internal_aliases": {
+    "TRACE_CRITIQUE_REPRODUCTIBLE": "LA_MACHINE_TE_FAIT_CHIER"
+  }
+}

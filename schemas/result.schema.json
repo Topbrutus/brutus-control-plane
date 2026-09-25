@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Brutus Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "run_id",
+    "worker_id",
+    "role",
+    "algorithm_id",
+    "status",
+    "artifact_hash"
+  ],
+  "properties": {
+    "run_id": {
+      "type": "string"
+    },
+    "worker_id": {
+      "type": "string",
+      "pattern": "^POSTE-0[1-5]$"
+    },
+    "role": {
+      "enum": [
+        "PRIMARY",
+        "MIRROR",
+        "COUNTERTEST",
+        "PRECISION",
+        "ARBITER"
+      ]
+    },
+    "algorithm_id": {
+      "type": "string"
+    },
+    "code_commit": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "status": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "DIVERGENCE",
+        "PRECISION_WALL"
+      ]
+    },
+    "artifact_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "metrics": {
+      "type": "object"
+    },
+    "notes": {
+      "type": "string"
+    }
+  }
+}

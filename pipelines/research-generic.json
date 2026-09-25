@@ -1,0 +1,52 @@
+{
+  "version": "1.0",
+  "pipeline": "research-generic",
+  "stages": [
+    {
+      "id": "INGEST",
+      "requires": [
+        "source"
+      ]
+    },
+    {
+      "id": "NORMALIZE",
+      "requires": [
+        "input_hash"
+      ]
+    },
+    {
+      "id": "COMPUTE",
+      "worker_role": "PRIMARY"
+    },
+    {
+      "id": "MIRROR",
+      "worker_role": "MIRROR"
+    },
+    {
+      "id": "COUNTERTEST",
+      "worker_role": "COUNTERTEST"
+    },
+    {
+      "id": "PRECISION",
+      "worker_role": "PRECISION"
+    },
+    {
+      "id": "PROOF",
+      "requires": [
+        "proof_scope",
+        "limitations"
+      ]
+    },
+    {
+      "id": "TRACE",
+      "worker_role": "ARBITER"
+    },
+    {
+      "id": "RELEASE",
+      "requires": [
+        "release_manifest",
+        "artifact_hashes"
+      ]
+    }
+  ]
+}

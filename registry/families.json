@@ -1,0 +1,25 @@
+{
+  "version": "1.0",
+  "families": [
+    {
+      "id": "BRUTUS-PELL",
+      "kind": "number-theory",
+      "status": "active"
+    },
+    {
+      "id": "STEREO-Z",
+      "kind": "deterministic-transform",
+      "status": "active"
+    },
+    {
+      "id": "ASTRAEUM",
+      "kind": "verification-engine",
+      "status": "active"
+    },
+    {
+      "id": "ANTMUX",
+      "kind": "system",
+      "status": "external-boundary"
+    }
+  ]
+}

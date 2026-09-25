@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "name": "brutus-control-plane",
+  "version": "0.1.0",
+  "invariant": "NO_PROMOTION_WITHOUT_TRACE",
+  "deterministic": true,
+  "statuses": [
+    "OBSERVATION",
+    "CANDIDATE",
+    "VERIFIED",
+    "PROVEN",
+    "RELEASED"
+  ],
+  "stages": [
+    "INGEST",
+    "NORMALIZE",
+    "COMPUTE",
+    "MIRROR",
+    "COUNTERTEST",
+    "PRECISION",
+    "PROOF",
+    "TRACE",
+    "RELEASE"
+  ],
+  "worker_count": 5,
+  "event_log": "runs/events.jsonl",
+  "manifest_dir": "runs/manifests",
+  "hash": "sha256"
+}

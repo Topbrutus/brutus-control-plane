@@ -1,0 +1,42 @@
+{
+  "version": "1.0",
+  "workers": [
+    {
+      "id": "POSTE-01",
+      "role": "PRIMARY",
+      "purpose": "Calcul principal",
+      "must_be_independent_from": []
+    },
+    {
+      "id": "POSTE-02",
+      "role": "MIRROR",
+      "purpose": "Implémentation miroir indépendante",
+      "must_be_independent_from": [
+        "POSTE-01"
+      ]
+    },
+    {
+      "id": "POSTE-03",
+      "role": "COUNTERTEST",
+      "purpose": "Recherche active de contre-exemples",
+      "must_be_independent_from": [
+        "POSTE-01",
+        "POSTE-02"
+      ]
+    },
+    {
+      "id": "POSTE-04",
+      "role": "PRECISION",
+      "purpose": "Audit haute précision / stabilité numérique",
+      "must_be_independent_from": [
+        "POSTE-01"
+      ]
+    },
+    {
+      "id": "POSTE-05",
+      "role": "ARBITER",
+      "purpose": "Arbitrage des traces et promotion",
+      "must_not_compute_primary_result": true
+    }
+  ]
+}

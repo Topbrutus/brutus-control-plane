@@ -1,0 +1,19 @@
+{
+  "version": "1.0",
+  "pipeline": "brutus-pell",
+  "extends": "research-generic",
+  "family": "BRUTUS-PELL",
+  "required_checks": [
+    "complete_pair_definition",
+    "independent_mirror_path",
+    "counterexample_search",
+    "precision_audit",
+    "source_commit_pinned"
+  ],
+  "default_precision_digits": 70,
+  "release_requires": [
+    "proof_artifact",
+    "limitations",
+    "final_trace"
+  ]
+}

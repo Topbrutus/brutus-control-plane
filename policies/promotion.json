@@ -1,0 +1,30 @@
+{
+  "version": "1.0",
+  "transitions": {
+    "OBSERVATION->CANDIDATE": [
+      "source_commit",
+      "input_hash",
+      "primary_result"
+    ],
+    "CANDIDATE->VERIFIED": [
+      "mirror_result",
+      "countertest_result",
+      "reproducibility_pass"
+    ],
+    "VERIFIED->PROVEN": [
+      "proof_artifact",
+      "proof_scope",
+      "limitations"
+    ],
+    "PROVEN->RELEASED": [
+      "release_manifest",
+      "artifact_hashes",
+      "final_trace"
+    ]
+  },
+  "forbidden": [
+    "skip_status",
+    "silent_artifact_replacement",
+    "same_algorithm_claimed_as_independent"
+  ]
+}

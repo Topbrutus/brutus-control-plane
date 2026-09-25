@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Brutus Trace Event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "event",
+    "run_id",
+    "timestamp",
+    "source_commit"
+  ],
+  "properties": {
+    "event": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "DIVERGENCE",
+        "PRECISION_WALL",
+        "TRACE_CRITIQUE_REPRODUCTIBLE",
+        "PROMOTION_BLOCKED",
+        "PROMOTION_GRANTED"
+      ]
+    },
+    "run_id": {
+      "type": "string"
+    },
+    "timestamp": {
+      "type": "string"
+    },
+    "source_commit": {
+      "type": "string"
+    },
+    "worker_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "stage": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "detail": {
+      "type": "object"
+    },
+    "previous_event_hash": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "event_hash": {
+      "type": "string"
+    }
+  }
+}

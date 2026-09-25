@@ -1,0 +1,26 @@
+{
+  "version": "1.0",
+  "repositories": [
+    {
+      "family": "BRUTUS-PELL",
+      "repo": "Topbrutus/topbrutus_one",
+      "write_scope": "memoria/astra only"
+    },
+    {
+      "family": "ASTRAEUM",
+      "repo": null,
+      "local_path": "C:/Users/casho/OneDrive/Documents/ChatGPT/ASTRAEUM",
+      "status": "local"
+    },
+    {
+      "family": "ANTMUX",
+      "repo": "Topbrutus/Antmux",
+      "write_scope": "protected"
+    },
+    {
+      "family": "CONTROL-PLANE",
+      "repo": "Topbrutus/brutus-control-plane",
+      "write_scope": "control-plane"
+    }
+  ]
+}
