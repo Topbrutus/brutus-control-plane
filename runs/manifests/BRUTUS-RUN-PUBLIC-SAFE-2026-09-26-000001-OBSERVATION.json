@@ -1,0 +1,30 @@
+{
+  "run_id": "BRUTUS-RUN://PUBLIC-SAFE/2026-09-26/000001",
+  "family": "BRUTUS-CONTROL-PLANE-LIVE",
+  "status": "OBSERVATION",
+  "source": {
+    "repo": "Topbrutus/brutus-control-plane",
+    "branch": "astra/z-stereo-ninefold-candidate",
+    "commit": "9118cf6d9aca45f769f0497259890d546c9a2136"
+  },
+  "compute": {
+    "deterministic": true,
+    "algorithm_id": "public-safe-live-filter-v0.1",
+    "internal_port": 8872,
+    "public_port": 8873,
+    "public_server_read_only": true
+  },
+  "verification": {
+    "unit_tests": "18/18 PASS",
+    "public_mode": "PUBLIC_SAFE",
+    "read_only": true,
+    "post_request_status": 405,
+    "content_security_policy_present": true,
+    "raw_input_field_exposed": false,
+    "route_field_exposed": false,
+    "raw_command_exposed": false,
+    "local_path_exposed": false,
+    "known_secret_test_value_exposed": false
+  },
+  "scope": "Local public-safe prototype only. No Internet deployment performed. Server/Nginx publication remains a separate audited step."
+}
