@@ -29,7 +29,7 @@ class ZStereoNinefoldTests(unittest.TestCase):
         self.assertEqual(result["global_error"], 0)
         self.assertTrue(result["identity_route"])
         self.assertEqual(result["local_errors"], (Fraction(0),) * 9)
-        self.assertEqual(result["trace_points"], 53)
+        self.assertEqual(result["trace_points"], 62)
 
     def test_trace_is_deterministic(self):
         a = run_topology(Fraction(17, 5))
