@@ -41,3 +41,25 @@ Les événements `COMMAND_START`, `OUTPUT` et `COMMAND_END` apparaissent dans la
 vitrine pendant l'exécution. Les motifs évidents de token/mot de passe sont masqués,
 mais cette version reste **locale seulement**. Ne pas l'exposer publiquement avant
 l'audit de filtrage et la séparation explicite du flux public.
+
+## Mode PUBLIC SAFE
+
+Le mode public est séparé du panneau interne.
+
+- Interne : `http://127.0.0.1:8872`
+- Public lecture seule : `http://127.0.0.1:8873`
+
+Lancer le panneau public :
+
+```powershell
+python live\public_server.py
+```
+
+Le serveur public ne transmet que `/api/public-state`, filtré par le serveur interne.
+Il ne publie pas l'entrée brute, le routage interne, les commandes brutes, les chemins
+locaux, les URLs, les adresses IP, les courriels, les secrets évidents ni les identifiants
+hexadécimaux longs. Les sorties de tests sont résumées en événements publics.
+
+Les méthodes POST/PUT/DELETE du serveur public retournent `405`.
+Pour un futur déploiement nginx, n'exposer que le port public `8873`; garder `8872`
+sur loopback et inaccessible depuis Internet.

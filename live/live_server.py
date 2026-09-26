@@ -1,6 +1,7 @@
 ﻿from __future__ import annotations
 
 import json
+import re
 import sys
 import threading
 import time
@@ -25,6 +26,19 @@ STOP = threading.Event()
 EVENTS: deque[dict[str, object]] = deque(maxlen=120)
 EVENT_SEQ = 0
 TRACE_COUNTS = [1, 4, 13, 49, 58, 61, 62]
+
+PUBLIC_SECRET_PATTERNS = [
+    re.compile(r"(?i)(authorization:\s*bearer\s+)[^\s]+"),
+    re.compile(r"(?i)((?:api[_-]?key|token|password|secret)\s*[=:]\s*)[^\s]+"),
+]
+PUBLIC_REDACTIONS = [
+    (re.compile(r"(?i)https?://\S+"), "[URL]"),
+    (re.compile(r"(?i)\b[A-Z]:\\[^\s\"']+"), "[LOCAL_PATH]"),
+    (re.compile(r"(?i)(?:/home|/Users|/mnt|/tmp)/[^\s\"']+"), "[LOCAL_PATH]"),
+    (re.compile(r"\b(?:\d{1,3}\.){3}\d{1,3}\b"), "[IP]"),
+    (re.compile(r"\b[A-Fa-f0-9]{24,}\b"), "[ID]"),
+    (re.compile(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b"), "[EMAIL]"),
+]
 STAGE_NAMES = [
     "ENTREE", "Z1 1->3", "F 3->9", "Z MIROIR 9->36",
     "CHECK 36->9", "RECOMB 9->3", "SORTIE 3->1",
@@ -50,6 +64,60 @@ def emit_event(kind: str, label: str, detail: str = "", status: str = "INFO", so
         }
         EVENTS.append(event)
         return dict(event)
+
+
+def sanitize_public_text(text: object, limit: int = 180) -> str:
+    value = str(text or "").strip()
+    for pattern in PUBLIC_SECRET_PATTERNS:
+        value = pattern.sub(r"\1[REDACTED]", value)
+    for pattern, replacement in PUBLIC_REDACTIONS:
+        value = pattern.sub(replacement, value)
+    return value[:limit]
+
+
+def public_event(event: dict[str, object]) -> dict[str, object]:
+    kind = str(event.get("kind", "EVENT"))
+    status = str(event.get("status", "INFO"))
+    detail = str(event.get("detail", ""))
+    public_detail = ""
+
+    if kind == "COMMAND_START":
+        public_detail = "Validation lancée"
+    elif kind == "COMMAND_END":
+        match = re.search(r"exit=(-?\d+).*?([0-9]+(?:\.[0-9]+)?)s", detail)
+        public_detail = (
+            f"exit={match.group(1)} · {match.group(2)}s"
+            if match else ("Validation terminée" if status != "FAIL" else "Validation échouée")
+        )
+    elif kind == "OUTPUT":
+        if re.fullmatch(r"OK", detail.strip(), flags=re.IGNORECASE):
+            public_detail = "Suite de tests: OK"
+        else:
+            summary = re.search(r"Ran\s+(\d+)\s+tests?\s+in\s+([0-9.]+)s", detail, flags=re.IGNORECASE)
+            if summary:
+                public_detail = f"{summary.group(1)} tests · {summary.group(2)}s"
+            elif re.search(r"\.\.\.\s+ok\s*$", detail, flags=re.IGNORECASE):
+                public_detail = "Test: PASS"
+            elif re.search(r"\.\.\.\s+(fail|error)\s*$", detail, flags=re.IGNORECASE):
+                public_detail = "Test: FAIL"
+            else:
+                public_detail = "Sortie de validation reçue"
+    else:
+        public_detail = sanitize_public_text(detail, 120)
+
+    source = str(event.get("source", "SYSTEM")).upper()
+    if source not in {"ASTRA", "CONTROL_PLANE", "ANTMUX"}:
+        source = "SYSTEM"
+
+    return {
+        "seq": int(event.get("seq", 0)),
+        "timestamp": float(event.get("timestamp", 0.0)),
+        "source": source,
+        "kind": sanitize_public_text(kind, 32),
+        "label": sanitize_public_text(event.get("label", "activité"), 80),
+        "detail": sanitize_public_text(public_detail, 140),
+        "status": sanitize_public_text(status, 16),
+    }
 
 
 def build_frames(x: Fraction, route_mode: str) -> list[list[Fraction]]:
@@ -113,6 +181,42 @@ def snapshot() -> dict[str, object]:
         }
 
 
+def public_snapshot() -> dict[str, object]:
+    with LOCK:
+        x = Fraction(str(STATE["input"]))
+        route_mode = str(STATE["route"])
+        index = int(STATE["index"])
+        frames = build_frames(x, route_mode)
+        frame = frames[index]
+        output = frames[-1][0]
+        f1 = f1_pell_rank_21_power(int(STATE["k"]))
+        safe_events = [public_event(event) for event in list(EVENTS)[-24:]]
+        return {
+            "mode": "PUBLIC_SAFE",
+            "read_only": True,
+            "status": STATE["status"],
+            "stage_index": index,
+            "stage": STAGE_NAMES[index],
+            "channels": len(frame),
+            "trace_points": TRACE_COUNTS[index],
+            "trace_total": 62,
+            "public_values": [frac_payload(v) for v in frame[:12]],
+            "public_values_total": len(frame),
+            "global_error": frac_payload(output - x),
+            "f1": {
+                "formula_id": "F1",
+                "k": int(STATE["k"]),
+                "value": f1.value,
+                "kind": f1.kind,
+                "formula": "z_P(21^k)=4*21^(k-1)",
+                "source_commit_short": f1.source_commit[:12],
+            },
+            "events": safe_events,
+            "event_seq": EVENT_SEQ,
+            "timestamp": time.time(),
+        }
+
+
 def advance() -> None:
     with LOCK:
         index = int(STATE["index"])
@@ -165,6 +269,8 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.send_header("Content-Length", str(len(raw)))
         self.send_header("Cache-Control", "no-store")
+        self.send_header("X-Content-Type-Options", "nosniff")
+        self.send_header("Referrer-Policy", "no-referrer")
         self.end_headers()
         self.wfile.write(raw)
 
@@ -172,6 +278,9 @@ class Handler(BaseHTTPRequestHandler):
         path = urlparse(self.path).path
         if path == "/api/state":
             self.send_json(snapshot())
+            return
+        if path == "/api/public-state":
+            self.send_json(public_snapshot())
             return
         if path in ("/", "/index.html"):
             raw = (ROOT / "live" / "index.html").read_bytes()
