@@ -1,0 +1,42 @@
+{
+  "run_id": "BRUTUS-RUN://Z-STEREO/2026-09-26/000001",
+  "family": "Z-STEREO-NINEFOLD",
+  "status": "OBSERVATION",
+  "source": {
+    "repo": "Topbrutus/brutus-control-plane",
+    "branch": "astra/z-stereo-ninefold-candidate",
+    "commit": "fa80c00c8f6506b6b4f3c2fdcb685122a963ee31",
+    "source_blob": "d4b80a7e5e8c66bc82693ebec4ddb7ecbf776e63",
+    "test_blob": "5caf0e79bf0de1e8dc523a915abbd7805fcb7064"
+  },
+  "compute": {
+    "deterministic": true,
+    "algorithm_id": "z-stereo-ninefold-topology-smoke-v0.1",
+    "arithmetic": "fractions.Fraction exact rational arithmetic",
+    "input": "17/5",
+    "formula_mode": "IDENTITY_PLACEHOLDERS_ONLY",
+    "scientific_formula_bank_executed": false
+  },
+  "verification": {
+    "primary": true,
+    "mirror": true,
+    "countertest": true,
+    "precision_audit": false,
+    "independent_algorithm": false
+  },
+  "evidence": {
+    "test_command": "python -m unittest discover -s tests -v (isolated exact branch blobs for new topology tests)",
+    "new_topology_tests": "5/5 PASS",
+    "identity_route_output": "17/5",
+    "identity_route_global_error": "0",
+    "identity_route_local_errors": "9/9 exactly zero",
+    "identity_trace_points": 62,
+    "identity_trace_hash": "4fd412acc52a9e260aaa81974f837c9f4092d63988c0990d7a00a75feebf18e8",
+    "cross_route": [0, 2, 1, 3],
+    "cross_route_output": "5/37",
+    "cross_route_global_error": "-604/185",
+    "cross_route_trace_hash": "164f4a1ca262e070fc8156e5dab151d2272b42d9dbfdb2e314ecd77c389b7379",
+    "initial_test_correction": "The first test expected 53 trace points; execution produced the correct structural count 62 = 1+3+9+36+9+3+1. The assertion was corrected and all five tests then passed.",
+    "scope": "Topology/routing/recombination mechanics only. Does not validate F1..F9 or G1..G36 scientific formulas."
+  }
+}
