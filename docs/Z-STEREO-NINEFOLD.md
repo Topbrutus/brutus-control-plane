@@ -134,3 +134,32 @@ The governing rule remains:
 6. Cross-routing experiments come after a clean baseline.
 
 This preserves the existing Brutus Control Plane principle: the control plane coordinates evidence and reproducibility; the scientific engines remain external.
+
+
+## Pinned candidate formula bank
+
+The nine PRIMARY slots are now pinned in `registry/z-stereo-formula-bank-v0.1.json`.
+
+| Slot | Formula family | Pinned source |
+|---|---|---|
+| F1 | `z_P(21^k)=4*21^(k-1)` | `Topbrutus/brutus-pell-square-rank-relation@aa08bd3...` |
+| F2 | `z_P(21^(2r+1))=(2*21^r)^2` | same pinned Pell source |
+| F3 | `S_Q(u)=E[prod_q(1+uZ_q)]` | `Topbrutus/brutus-pell-connected-spectrum@711d5b6...` |
+| F4 | connected logarithmic generator `K_Q(u)` | same pinned spectrum source |
+| F5 | `K3=T3` | same pinned spectrum source |
+| F6 | explicit `K4` coefficient identity | same pinned spectrum source |
+| F7 | explicit `K5` coefficient identity | same pinned spectrum source |
+| F8 | explicit `K6` coefficient identity | same pinned spectrum source |
+| F9 | frozen Brutus V1 numerical relation | `Topbrutus/boson-de-brutus@3b0e6d3...` |
+
+The F9 source repository records Zenodo DOI `10.5281/zenodo.22927791`.
+
+### Important type constraint
+
+These nine slots are **not yet numerically recombinable as one scalar vector**. Their input and output domains differ: Pell ranks are integers, the connected-spectrum slots require finite-sample statistical context, and the frozen Brutus relation is a separate numerical relation.
+
+Therefore the control plane now requires a typed envelope and an explicit normalization contract before the global `9 -> 3 -> 1` stage can be activated.
+
+This is intentional: topology is preserved, but incompatible mathematical objects are not silently mixed.
+
+F2 is derived from F1, and F3-F8 share one connected-spectrum family. These channels are useful as transformations, but they must not be miscounted as independent proofs.
