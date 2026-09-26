@@ -16,7 +16,24 @@
       "status": "explicit corollary of classical Pell/Lucas rank-lifting results",
       "source_repo": "Topbrutus/brutus-pell-square-rank-relation",
       "source_commit": "aa08bd336662dea0b6c836c273cf7f7d59f4a672",
-      "source_path": "README.md"
+      "source_path": "README.md",
+      "adapter_path": "src/z_stereo_formula_adapters.py",
+      "integration_status": "SMOKE_TESTED",
+      "integration_test": {
+        "tested_inputs": "k=2..8",
+        "expected_outputs": [
+          84,
+          1764,
+          37044,
+          777924,
+          16336404,
+          343064484,
+          7204354164
+        ],
+        "test_file": "tests/test_z_stereo_formula_adapters.py",
+        "result": "4/4 PASS",
+        "note": "Adapter/provenance integration test only; not independent mathematical proof."
+      }
     },
     {
       "slot": "F2",
