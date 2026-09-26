@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite this release."
+title: "Brutus Control Plane"
+type: software
+version: 0.1.0
+date-released: 2026-09-25
+authors:
+  - family-names: "St-Pierre"
+    given-names: "Gabriel"
+repository-code: "https://github.com/Topbrutus/brutus-control-plane"
+keywords:
+  - reproducibility
+  - provenance
+  - verification pipeline
+  - numerical audit
+  - ASTRAEUM

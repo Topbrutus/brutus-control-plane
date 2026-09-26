@@ -1,0 +1,22 @@
+{
+  "creators": [
+    {
+      "name": "St-Pierre, Gabriel"
+    }
+  ],
+  "title": "Brutus Control Plane",
+  "version": "0.1.0",
+  "access_right": "open",
+  "keywords": [
+    "research software",
+    "reproducibility",
+    "provenance",
+    "verification pipeline",
+    "numerical audit",
+    "Brutus",
+    "ASTRAEUM"
+  ],
+  "upload_type": "software",
+  "language": "eng",
+  "description": "A five-role research control plane for deterministic computation, independent mirror verification, counter-testing, precision auditing, provenance, and evidence-gated promotion. The initial release includes the first verified Brutus-Pell five-post run."
+}
