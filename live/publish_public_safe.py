@@ -13,7 +13,22 @@ INGEST_URL = os.environ.get(
     "ANTMUX_ZEL_INGEST_URL",
     "https://antmux.com/laboratoire/embryon-x72/api/zelstereos/ingest",
 )
-TOKEN = os.environ.get("ANTMUX_ZEL_INGEST_TOKEN", "").strip()
+def resolve_token() -> str:
+    token = os.environ.get("ANTMUX_ZEL_INGEST_TOKEN", "").strip()
+    if token:
+        return token
+    if os.name == "nt":
+        try:
+            import winreg
+            with winreg.OpenKey(winreg.HKEY_CURRENT_USER, r"Environment") as key:
+                value, _ = winreg.QueryValueEx(key, "ANTMUX_ZEL_INGEST_TOKEN")
+            return str(value).strip()
+        except (OSError, ImportError):
+            return ""
+    return ""
+
+
+TOKEN = resolve_token()
 INTERVAL = float(os.environ.get("ANTMUX_ZEL_INTERVAL", "0.25"))
 DRY_RUN = os.environ.get("ANTMUX_ZEL_DRY_RUN", "") == "1"
 
