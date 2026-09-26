@@ -3,248 +3,230 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ANTMUX / BRUTUS LIVE</title>
+<title>ANTMUX / BRUTUS — Vitrine Live</title>
 <style>
-:root{color-scheme:dark;--bg:#080b10;--panel:#10161f;--line:#2a3442;--text:#eef4ff;--muted:#8fa0b5;--ok:#72e5a2;--bad:#ff7b86;--hot:#78b8ff}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.4 system-ui,Segoe UI,sans-serif}
-main{max-width:1180px;margin:auto;padding:18px}.top{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
-h1{font-size:20px;margin:0}.badge{border:1px solid var(--line);padding:6px 10px;border-radius:999px;color:var(--muted)}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:14px}
-.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
-label{font-size:12px;color:var(--muted)}input,select,button{width:100%;margin-top:5px;padding:10px 12px;border-radius:9px;border:1px solid var(--line);background:#0b1017;color:var(--text);font:inherit}
-button{cursor:pointer}button:hover{border-color:var(--hot)}.buttons{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
-.machine{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;align-items:stretch}.stage{min-width:0;text-align:center;border:1px solid var(--line);border-radius:10px;padding:10px 6px;color:var(--muted)}
-.stage.active{border-color:var(--hot);color:var(--text);box-shadow:inset 0 0 0 1px var(--hot)}.stage.done{border-color:#3d7656;color:var(--ok)}
-.stage b{display:block;font-size:12px}.stage strong{display:block;font-size:22px;margin-top:5px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}.metric{border:1px solid var(--line);border-radius:10px;padding:12px}
-.metric span{display:block;color:var(--muted);font-size:12px}.metric strong{display:block;font-size:22px;margin-top:3px;overflow-wrap:anywhere}
-.values{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:7px;max-height:330px;overflow:auto}
-.value{border:1px solid var(--line);border-radius:9px;padding:8px;font-family:ui-monospace,Consolas,monospace}.value small{display:block;color:var(--muted)}
-.ok{color:var(--ok)}.bad{color:var(--bad)}#msg{color:var(--muted);font-size:13px;margin-top:8px}
-.events{display:grid;gap:6px;max-height:320px;overflow:auto}.event{border-left:3px solid var(--line);padding:7px 9px;background:#0b1017;border-radius:6px}.event.pass{border-left-color:var(--ok)}.event.fail{border-left-color:var(--bad)}.event.run{border-left-color:var(--hot)}.event small{display:block;color:var(--muted)}.event code{white-space:pre-wrap;overflow-wrap:anywhere;color:var(--text)}
-@media(max-width:760px){.machine{grid-template-columns:1fr 1fr}.buttons{grid-template-columns:1fr 1fr}}
-</style>
-<style>
-/* Palette extraite du visuel BRUTUS PRESET-BANK-01 :
-   nuit #030813, bleu #1d73ff, cyan #20dcff, magenta #ff28d7,
-   violet #9b44ff, or #ffc23b, vert #27e78e, orange #ff7a1a. */
+:root{
+  color-scheme:dark;
+  --bg:#05080c;--steel1:#b9bec3;--steel2:#6d747b;--steel3:#30363b;
+  --panel:#090d12;--panel2:#0d131a;--line:#141a21;--text:#edf4ff;--muted:#91a0b1;
+  --cyan:#56bfff;--blue:#087eff;--green:#20dc95;--gold:#ffb11a;--violet:#a742e8;--red:#ff4848;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:#020407;color:var(--text);font:16px/1.35 "Segoe UI",system-ui,sans-serif}
 body{
   background:
-    radial-gradient(circle at 52% -12%, rgba(29,115,255,.28), transparent 28%),
-    radial-gradient(circle at 88% 8%, rgba(155,68,255,.10), transparent 22%),
-    radial-gradient(circle at 12% 35%, rgba(32,220,255,.07), transparent 24%),
-    linear-gradient(180deg,#030813 0%,#06101c 52%,#03070d 100%);
+    radial-gradient(circle at 50% -20%,rgba(0,117,255,.11),transparent 33%),
+    linear-gradient(180deg,#05080c,#020407 62%,#010203);
 }
-body:before{
-  content:"";position:fixed;inset:0;pointer-events:none;opacity:.36;
-  background-image:
-    radial-gradient(circle at 14% 20%,rgba(255,255,255,.9) 0 1px,transparent 1.4px),
-    radial-gradient(circle at 67% 13%,rgba(32,220,255,.9) 0 1px,transparent 1.4px),
-    radial-gradient(circle at 82% 42%,rgba(155,68,255,.8) 0 1px,transparent 1.3px),
-    radial-gradient(circle at 31% 71%,rgba(255,255,255,.65) 0 1px,transparent 1.3px);
-  background-size:190px 170px,240px 220px,310px 280px,270px 250px;
-}
-h1{
-  letter-spacing:.04em;
-  background:linear-gradient(90deg,#ffffff,#9cd9ff 44%,#d8a5ff 72%,#ff7eea);
-  -webkit-background-clip:text;background-clip:text;color:transparent;
-  text-shadow:0 0 18px rgba(103,133,255,.38);
-}
-.panel{
-  position:relative;
-  border-color:#184f87;
+main{max-width:1220px;margin:auto;padding:12px 12px 28px}
+.section-label{margin:8px 0 4px 2px;color:#c9d2dc;font-weight:800;font-size:13px;letter-spacing:.055em}
+.rack{
+  position:relative;padding:14px;border:1px solid #1f252c;border-radius:13px;margin-bottom:10px;
   background:
-    linear-gradient(180deg,rgba(12,29,48,.95),rgba(5,15,27,.96)),
-    #091522;
-  box-shadow:
-    inset 0 1px 0 rgba(174,226,255,.10),
-    inset 0 -1px 0 rgba(0,0,0,.65),
-    0 0 0 1px rgba(21,111,177,.13),
-    0 12px 34px rgba(0,0,0,.28);
+    repeating-linear-gradient(90deg,rgba(255,255,255,.028) 0 1px,rgba(0,0,0,.02) 1px 3px),
+    linear-gradient(180deg,#737980 0%,#4e545a 10%,#8e9499 46%,#4b5157 91%,#747b80 100%);
+  box-shadow:inset 0 1px 0 #d7dade,inset 0 -1px 0 #25292d,0 4px 9px rgba(0,0,0,.42);
 }
-.panel:after{
-  content:"";position:absolute;left:14px;right:14px;top:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(79,197,255,.62),transparent);
-  pointer-events:none;
+.rack:before,.rack:after{
+  content:"";position:absolute;top:8px;width:10px;height:10px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#e2e5e8 0 12%,#727980 16% 36%,#16191d 42% 55%,#91979d 60% 70%,#22272c 74%);
+  box-shadow:0 0 0 1px rgba(0,0,0,.65);
 }
+.rack:before{left:8px}.rack:after{right:8px}
+.face{
+  background:linear-gradient(180deg,#0d1218,#070b10 55%,#05080c);
+  border:1px solid #06090c;border-radius:9px;
+  box-shadow:inset 0 0 0 1px #252c34,inset 0 2px 8px rgba(0,0,0,.8),0 1px 0 rgba(255,255,255,.24);
+}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:12px 16px}
+.brand{min-width:0}.brand h1{margin:0;font-size:22px;letter-spacing:.035em;font-weight:900}
+.brand-main{color:#eaf4ff}.brand-live{background:linear-gradient(90deg,#65c7ff,#9a8cff 48%,#f052e9);-webkit-background-clip:text;background-clip:text;color:transparent}
+.brand small{display:block;color:#a9b3be;margin-top:2px;font-size:12px}
+.status-pill{white-space:nowrap;padding:8px 14px;border-radius:999px;color:#93ffd6;border:1px solid #33e8aa;background:#07130f;box-shadow:inset 0 0 10px rgba(28,219,148,.08),0 0 12px rgba(28,219,148,.12)}
+.controls-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1.25fr;gap:10px}
+label{font-size:12px;color:#d0d5db}
 input,select{
-  border-color:#174a75;
-  background:linear-gradient(180deg,#0d1c2c,#08111d);
-  box-shadow:inset 0 2px 5px rgba(0,0,0,.55),0 1px 0 rgba(121,210,255,.08);
+  width:100%;margin-top:5px;padding:11px 12px;border-radius:8px;color:#f3f7fb;background:#070b0f;border:1px solid #131820;
+  box-shadow:inset 0 2px 6px #000,inset 0 0 0 1px #303740;font:inherit;
 }
-input:focus,select:focus{
-  outline:none;border-color:#20dcff;
-  box-shadow:0 0 0 2px rgba(32,220,255,.16),0 0 18px rgba(32,220,255,.13),inset 0 2px 5px rgba(0,0,0,.55);
-}
+input:focus,select:focus{outline:none;border-color:#4db7ff;box-shadow:inset 0 2px 6px #000,0 0 0 2px rgba(77,183,255,.18)}
+.action-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:11px}
 button{
-  position:relative;overflow:hidden;font-weight:800;letter-spacing:.03em;
-  border-width:1px;
-  text-shadow:0 1px 2px rgba(0,0,0,.75);
-  transform:translateY(0);
-  transition:transform .11s ease,filter .11s ease,box-shadow .11s ease;
+  position:relative;width:100%;padding:11px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.28);
+  color:#fff;font:800 16px/1 "Segoe UI",system-ui,sans-serif;letter-spacing:.04em;text-shadow:0 1px 2px #000;cursor:pointer;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.42),inset 0 -3px 0 rgba(0,0,0,.38),0 3px 0 #0c0f12,0 5px 8px rgba(0,0,0,.35);
+  transition:transform .08s ease,filter .08s ease;
 }
-button:before{
-  content:"";position:absolute;inset:1px 2px auto 2px;height:44%;
-  border-radius:8px 8px 55% 55%;
-  background:linear-gradient(180deg,rgba(255,255,255,.28),rgba(255,255,255,0));
-  pointer-events:none;
-}
-button:active{
-  transform:translateY(2px);
-  box-shadow:inset 0 3px 7px rgba(0,0,0,.62)!important;
-}
-#start{
-  border-color:#1df2a1;
-  background:linear-gradient(180deg,#14d98b 0%,#08704c 58%,#064a37 100%);
-  box-shadow:inset 0 1px 0 rgba(212,255,238,.55),inset 0 -3px 0 rgba(0,44,31,.75),0 0 18px rgba(39,231,142,.28),0 5px 0 #033c2b;
-}
-#pause{
-  border-color:#ffc23b;
-  background:linear-gradient(180deg,#ffbf2d 0%,#9b5d07 58%,#573304 100%);
-  box-shadow:inset 0 1px 0 rgba(255,246,194,.65),inset 0 -3px 0 rgba(78,42,0,.8),0 0 18px rgba(255,194,59,.22),0 5px 0 #3d2403;
-}
-#step,#apply{
-  border-color:#27cfff;
-  background:linear-gradient(180deg,#189cf4 0%,#1258a8 58%,#0a3267 100%);
-  box-shadow:inset 0 1px 0 rgba(209,244,255,.58),inset 0 -3px 0 rgba(3,38,89,.85),0 0 18px rgba(29,115,255,.28),0 5px 0 #082751;
-}
-#reset{
-  border-color:#d356ff;
-  background:linear-gradient(180deg,#9b44ff 0%,#5b2698 58%,#36145d 100%);
-  box-shadow:inset 0 1px 0 rgba(244,217,255,.55),inset 0 -3px 0 rgba(43,12,78,.85),0 0 18px rgba(155,68,255,.24),0 5px 0 #291047;
-}
-button:hover{filter:brightness(1.13) saturate(1.08)}
-.badge{
-  background:linear-gradient(180deg,rgba(19,47,77,.95),rgba(5,16,29,.96));
-  border-color:#2b77ae;
-  box-shadow:inset 0 1px 0 rgba(151,225,255,.18),0 0 12px rgba(32,220,255,.08);
-}
+button:before{content:"";position:absolute;left:3px;right:3px;top:2px;height:34%;border-radius:6px 6px 50% 50%;background:linear-gradient(180deg,rgba(255,255,255,.19),transparent);pointer-events:none}
+button:hover{filter:brightness(1.08)}button:active{transform:translateY(2px);box-shadow:inset 0 3px 8px rgba(0,0,0,.62),0 1px 0 #07090b}
+#start{background:linear-gradient(#10a96d,#04623f);border-color:#2be9a0}
+#pause{background:linear-gradient(#d58a12,#754403);border-color:#ffc04a}
+#step,#apply{background:linear-gradient(#087de0,#06467f);border-color:#46b3ff}
+#reset{background:linear-gradient(#772ab2,#3c1262);border-color:#c65eff}
+.ready{margin-top:8px;color:#d4d8dd;font-size:13px}
+.stage-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
 .stage{
-  position:relative;
-  background:linear-gradient(180deg,#0c1a29,#07101b);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),inset 0 -3px 7px rgba(0,0,0,.45),0 4px 8px rgba(0,0,0,.20);
+  min-width:0;text-align:center;padding:11px 5px;border-radius:8px;background:linear-gradient(180deg,#0a0f14,#05090d);
+  border:1px solid #090c10;box-shadow:inset 0 0 0 1px #303740,inset 0 2px 6px #000,0 1px 0 rgba(255,255,255,.28);
+  color:#cbd4df;transition:box-shadow .12s ease,border-color .12s ease,transform .12s ease;
 }
-.stage:nth-child(1){border-color:#e730ce}.stage:nth-child(2){border-color:#ffc23b}.stage:nth-child(3){border-color:#277fff}.stage:nth-child(4){border-color:#24d98b}.stage:nth-child(5){border-color:#20dcff}.stage:nth-child(6){border-color:#ff7a1a}.stage:nth-child(7){border-color:#a54dff}
-.stage.active{
-  color:#fff;
-  transform:translateY(-2px);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.32),inset 0 -3px 8px rgba(0,0,0,.5),0 0 24px currentColor,0 7px 12px rgba(0,0,0,.32);
+.stage b{display:block;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.stage strong{display:block;margin-top:4px;font:800 23px/1 ui-monospace,Consolas,monospace;color:#63bfff;text-shadow:0 0 8px rgba(52,156,255,.25)}
+.stage.active{border-color:#53d9ff;box-shadow:inset 0 0 0 1px #5cdcff,inset 0 2px 6px #000,0 0 14px rgba(45,192,255,.32);transform:translateY(-1px)}
+.stage.done strong{color:#83eebc}.stage.done{border-color:#2d6d54}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.metric{padding:12px 13px;min-height:76px}.metric span{display:block;color:#aeb7c2;font-size:11px}.metric strong{display:block;margin-top:5px;font:800 23px/1.05 ui-monospace,Consolas,monospace;overflow-wrap:anywhere}
+.metric.stage-readout strong{color:#ffb51f}.metric.trace-readout strong,.metric.channel-readout strong{color:#64baff}.metric.error-readout strong{color:#ff4949}
+.formula-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px}
+.formula-card{padding:12px 13px;min-height:74px}.formula-card span{display:block;color:#aeb7c2;font-size:11px}.formula-card strong{display:block;margin-top:5px;font:700 18px/1.15 ui-monospace,Consolas,monospace;overflow-wrap:anywhere}
+#f1{color:#69bcff}#formula{color:#72e2bc;font-size:15px}#commit{color:#81c6ff;font-size:14px}
+.values-head,.events-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}
+.values-head strong,.events-head strong{font-size:16px}
+.badge{padding:6px 11px;border-radius:999px;border:1px solid #3a4652;background:#090e14;box-shadow:inset 0 1px 3px #000;color:#d2dae4;font-size:12px}
+.values{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:7px;max-height:320px;overflow:auto}
+.value{padding:9px 10px;border-radius:7px;background:#05090d;border:1px solid #17202a;box-shadow:inset 0 1px 4px #000;font:700 15px/1.28 ui-monospace,Consolas,monospace;color:#ff5a50}
+.value small{display:block;color:#a5b1be;font:11px/1.2 ui-monospace,Consolas,monospace}
+.events{max-height:330px;overflow:auto;padding:7px;background:#02070a;border:1px solid #101820;border-radius:8px;box-shadow:inset 0 0 14px #000}
+.event{padding:6px 9px;border-left:3px solid #ffb113;border-bottom:1px solid #10171c;font:13px/1.35 ui-monospace,Consolas,monospace}
+.event small{display:block;color:#d6a42c}.event code{color:#66c3ff;white-space:pre-wrap;overflow-wrap:anywhere}.event.pass{border-left-color:#31e69f}.event.fail{border-left-color:#ff4a4a}.event.run{border-left-color:#ffb113}
+.event.pass small{color:#6de2b2}.event.fail small{color:#ff7b7b}
+::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-track{background:#05080b}::-webkit-scrollbar-thumb{background:#747d86;border:2px solid #161b20;border-radius:8px}
+.hardware-strip{
+  height:5px;margin:8px 0 0;border-radius:3px;
+  background:repeating-linear-gradient(90deg,#72787d 0 2px,#4d5358 2px 4px);
+  box-shadow:inset 0 1px 0 #aeb3b7,inset 0 -1px 0 #2b3034;
 }
-.metric,.value,.event{
-  background:linear-gradient(180deg,rgba(12,27,43,.96),rgba(5,14,24,.98));
-  border-color:#173f64;
-  box-shadow:inset 0 1px 0 rgba(140,220,255,.07),inset 0 -2px 4px rgba(0,0,0,.35);
+@media(max-width:900px){
+  .controls-grid{grid-template-columns:1fr 1fr}.stage-grid{grid-template-columns:repeat(4,1fr)}
+  .metrics{grid-template-columns:1fr 1fr}.formula-grid{grid-template-columns:1fr}
 }
-.value:hover{border-color:#20dcff;box-shadow:0 0 16px rgba(32,220,255,.10),inset 0 1px 0 rgba(164,235,255,.15)}
-#connection.ok{border-color:#27e78e;color:#a8ffd3;box-shadow:0 0 15px rgba(39,231,142,.18),inset 0 1px 0 rgba(255,255,255,.12)}
-#status{font-weight:800;letter-spacing:.08em}
-@media (prefers-reduced-motion:reduce){button,.stage{transition:none}}
+@media(max-width:560px){
+  main{padding:8px}.topbar{align-items:flex-start}.brand h1{font-size:18px}.status-pill{font-size:11px}
+  .controls-grid,.action-grid,.metrics{grid-template-columns:1fr 1fr}.stage-grid{grid-template-columns:1fr 1fr}
+  button{font-size:14px}.rack{padding:11px}.metric strong{font-size:20px}
+}
+@media(prefers-reduced-motion:reduce){button,.stage{transition:none}}
 </style>
 </head>
 <body>
 <main>
-  <div class="top">
-    <div>
-      <h1>ANTMUX / BRUTUS — VITRINE LIVE</h1>
-      <div id="subtitle" style="color:var(--muted);font-size:13px">Prototype local · trace visible · aucune donnée secrète</div>
+<div class="section-label">01 · EN-TÊTE</div>
+<section class="rack">
+  <div class="face topbar">
+    <div class="brand">
+      <h1><span class="brand-main">ANTMUX / BRUTUS</span> — <span class="brand-live">VITRINE LIVE</span></h1>
+      <small>Trace locale visible · calculs reproductibles · flux public non activé</small>
     </div>
-    <div class="badge" id="connection">CONNEXION…</div>
+    <div class="status-pill" id="connection">CONNEXION…</div>
   </div>
+</section>
+<div class="section-label">02 · COMMANDES</div>
+<section class="rack">
+  <div class="controls-grid">
+    <label>Entrée X<input id="inputX" value="17/5"></label>
+    <label>Routage<select id="route"><option value="identity">IDENTITY</option><option value="cross">CROSS</option></select></label>
+    <label>Test F1 — k<input id="k" type="number" min="2" value="3"></label>
+    <label>&nbsp;<button id="apply" type="button">APPLIQUER</button></label>
+  </div>
+  <div class="action-grid">
+    <button id="start" type="button">▶ RUN</button>
+    <button id="pause" type="button">Ⅱ PAUSE</button>
+    <button id="step" type="button">→ STEP</button>
+    <button id="reset" type="button">↻ RESET</button>
+  </div>
+  <div id="msg" class="ready">Prêt.</div>
+</section>
 
-  <section class="panel">
-    <div class="controls">
-      <label>Entrée X<input id="inputX" value="17/5"></label>
-      <label>Routage<select id="route"><option value="identity">IDENTITY</option><option value="cross">CROSS</option></select></label>
-      <label>Test F1 — k<input id="k" type="number" min="2" value="3"></label>
-      <label>&nbsp;<button id="apply">APPLIQUER</button></label>
-    </div>
-    <div class="buttons">
-      <button id="start">▶ RUN</button>
-      <button id="pause">⏸ PAUSE</button>
-      <button id="step">→ STEP</button>
-      <button id="reset">↻ RESET</button>
-    </div>
-    <div id="msg">Prêt.</div>
-  </section>
+<div class="section-label">03 · SEPT ÉTAGES</div>
+<section class="rack"><div class="stage-grid" id="machine"></div></section>
 
-  <section class="panel">
-    <div class="machine" id="machine"></div>
-  </section>
+<div class="section-label">04 · AFFICHEURS D’ÉTAT</div>
+<section class="rack">
+  <div class="metrics">
+    <div class="face metric stage-readout"><span>ÉTAGE</span><strong id="stage">—</strong></div>
+    <div class="face metric channel-readout"><span>CANAUX</span><strong id="channels">—</strong></div>
+    <div class="face metric trace-readout"><span>TRACE</span><strong id="trace">—</strong></div>
+    <div class="face metric error-readout"><span>ERREUR GLOBALE</span><strong id="error">—</strong></div>
+  </div>
+</section>
+<div class="section-label">05 · FORMULE / SOURCE</div>
+<section class="rack">
+  <div class="formula-grid">
+    <div class="face formula-card"><span>F1 RÉEL · zP(21^k)</span><strong id="f1">—</strong></div>
+    <div class="face formula-card"><span>FORMULE</span><strong id="formula">—</strong></div>
+    <div class="face formula-card"><span>SOURCE COMMIT</span><strong id="commit">—</strong></div>
+  </div>
+</section>
 
-  <section class="panel">
-    <div class="grid">
-      <div class="metric"><span>ÉTAGE</span><strong id="stage">—</strong></div>
-      <div class="metric"><span>CANAUX</span><strong id="channels">—</strong></div>
-      <div class="metric"><span>TRACE</span><strong id="trace">—</strong></div>
-      <div class="metric"><span>ERREUR GLOBALE</span><strong id="error">—</strong></div>
-    </div>
-  </section>
+<div class="section-label">06 · VALEURS D’ÉTAGE</div>
+<section class="rack">
+  <div class="values-head"><strong>Valeurs de l’étage</strong><span id="status" class="badge">STOP</span></div>
+  <div class="values" id="values"></div>
+</section>
 
-  <section class="panel">
-    <div class="grid">
-      <div class="metric"><span>F1 RÉEL · zP(21^k)</span><strong id="f1">—</strong></div>
-      <div class="metric"><span>FORMULE</span><strong id="formula" style="font-size:15px">—</strong></div>
-      <div class="metric"><span>SOURCE COMMIT</span><strong id="commit" style="font-size:13px">—</strong></div>
-    </div>
-  </section>
-  <section class="panel">
-    <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px">
-      <strong>Valeurs de l'étage</strong><span id="status" class="badge">STOP</span>
-    </div>
-    <div class="values" id="values"></div>
-  </section>
-
-  <section class="panel">
-    <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px">
-      <strong>ACTIVITÉ ASTRA / COMMANDES RÉELLES</strong><span id="eventSeq" class="badge">0 EVENT</span>
-    </div>
-    <div class="events" id="events"><div class="event"><small>EN ATTENTE</small><code>Les prochains tests lancés par Astra apparaîtront ici.</code></div></div>
-  </section>
+<div class="section-label">07 · LOG RADIO</div>
+<section class="rack">
+  <div class="events-head"><strong>ACTIVITÉ ASTRA / COMMANDES RÉELLES</strong><span id="eventSeq" class="badge">0 EVENTS</span></div>
+  <div class="events" id="events"><div class="event"><small>EN ATTENTE</small><code>Les prochaines commandes réelles apparaîtront ici.</code></div></div>
+  <div class="hardware-strip"></div>
+</section>
 </main>
 <script>
 const names=['ENTRÉE','Z1 1→3','F 3→9','Z MIROIR 9→36','CHECK 36→9','RECOMB 9→3','SORTIE 3→1'];
 const counts=[1,3,9,36,9,3,1];
 const $=id=>document.getElementById(id);
 let latest=null;
-
 function buildMachine(){
   $('machine').innerHTML='';
-  names.forEach((n,i)=>{
+  names.forEach((name,i)=>{
     const d=document.createElement('div');
-    d.className='stage'; d.dataset.i=i;
-    d.innerHTML='<b>'+n+'</b><strong>'+counts[i]+'</strong>';
+    d.className='stage';d.dataset.i=i;
+    d.innerHTML='<b>'+name+'</b><strong>'+counts[i]+'</strong>';
     $('machine').appendChild(d);
   });
 }
-
 async function api(path,body){
   const opt={method:'POST',headers:{'Content-Type':'application/json'}};
-  if(body!==undefined) opt.body=JSON.stringify(body);
+  if(body!==undefined)opt.body=JSON.stringify(body);
   const r=await fetch(path,opt);
-  if(!r.ok) throw new Error(await r.text());
+  if(!r.ok)throw new Error(await r.text());
   return r.json();
 }
-
+function renderEvents(s){
+  $('eventSeq').textContent=(s.event_seq||0)+' EVENT'+((s.event_seq||0)===1?'':'S');
+  const evs=(s.events||[]).slice().reverse();
+  $('events').innerHTML='';
+  if(!evs.length){
+    $('events').innerHTML='<div class="event"><small>EN ATTENTE</small><code>Les prochaines commandes réelles apparaîtront ici.</code></div>';
+    return;
+  }
+  evs.forEach(ev=>{
+    const d=document.createElement('div');
+    const cls=String(ev.status||'').toLowerCase();
+    d.className='event '+(cls==='pass'?'pass':cls==='fail'?'fail':cls==='run'?'run':'');
+    const when=new Date(Number(ev.timestamp)*1000).toLocaleTimeString('fr-CA',{hour12:false});
+    const small=document.createElement('small');
+    small.textContent='#'+ev.seq+' · '+when+' · '+ev.source+' · '+ev.kind+' · '+ev.status;
+    const code=document.createElement('code');
+    code.textContent=ev.label+(ev.detail?' — '+ev.detail:'');
+    d.appendChild(small);d.appendChild(code);$('events').appendChild(d);
+  });
+}
 function render(s){
   latest=s;
   $('connection').textContent='LOCAL LIVE';
-  $('connection').className='badge ok';
   $('stage').textContent=s.stage;
   $('channels').textContent=s.channels;
   $('trace').textContent=s.trace_points+' / '+s.trace_total;
   $('status').textContent=s.status;
-  $('f1').textContent=s.f1.value+'  (k='+s.f1.k+')';
+  $('f1').textContent=s.f1.value+' (k='+s.f1.k+')';
   $('formula').textContent=s.f1.formula;
   $('commit').textContent=s.f1.source_commit.slice(0,12)+'…';
   const e=s.global_error;
-  $('error').textContent=e.exact+'  ≈ '+Number(e.decimal).toPrecision(6);
-  $('error').className=Math.abs(e.decimal)<1e-12?'ok':'bad';
-
+  $('error').textContent=e.exact+' ≈ '+Number(e.decimal).toPrecision(6);
   document.querySelectorAll('.stage').forEach((el,i)=>{
     el.classList.toggle('active',i===s.stage_index);
     el.classList.toggle('done',i<s.stage_index);
   });
-
   $('values').innerHTML='';
   s.values.forEach((v,i)=>{
     const d=document.createElement('div');
@@ -252,54 +234,30 @@ function render(s){
     d.innerHTML='<small>CANAL '+String(i+1).padStart(2,'0')+'</small>'+v.exact+'<small>'+Number(v.decimal).toPrecision(9)+'</small>';
     $('values').appendChild(d);
   });
-
-  $('eventSeq').textContent=(s.event_seq||0)+' EVENT'+((s.event_seq||0)===1?'':'S');
-  const evs=(s.events||[]).slice().reverse();
-  $('events').innerHTML='';
-  if(!evs.length){
-    $('events').innerHTML='<div class="event"><small>EN ATTENTE</small><code>Les prochains tests lancés par Astra apparaîtront ici.</code></div>';
-  } else {
-    evs.forEach(ev=>{
-      const d=document.createElement('div');
-      const cls=String(ev.status||'').toLowerCase();
-      d.className='event '+(cls==='pass'?'pass':cls==='fail'?'fail':cls==='run'?'run':'');
-      const when=new Date(Number(ev.timestamp)*1000).toLocaleTimeString('fr-CA',{hour12:false});
-      const small=document.createElement('small');
-      small.textContent='#'+ev.seq+' · '+when+' · '+ev.source+' · '+ev.kind+' · '+ev.status;
-      const code=document.createElement('code');
-      code.textContent=ev.label+(ev.detail?' — '+ev.detail:'');
-      d.appendChild(small); d.appendChild(code); $('events').appendChild(d);
-    });
-  }
+  renderEvents(s);
 }
-
 async function poll(){
   try{
     const r=await fetch('/api/state',{cache:'no-store'});
-    if(!r.ok) throw new Error('HTTP '+r.status);
+    if(!r.ok)throw new Error('HTTP '+r.status);
     render(await r.json());
   }catch(err){
     $('connection').textContent='HORS LIGNE';
-    $('connection').className='badge bad';
+    $('connection').style.color='#ff7373';
     $('msg').textContent='Serveur indisponible: '+err.message;
   }
 }
-
 $('apply').addEventListener('click',async()=>{
   try{
     await api('/api/config',{input:$('inputX').value,route:$('route').value,k:Number($('k').value)});
-    $('msg').textContent='Configuration appliquée.';
-    await poll();
+    $('msg').textContent='Configuration appliquée.';await poll();
   }catch(e){$('msg').textContent='Erreur config: '+e.message;}
 });
 $('start').addEventListener('click',async()=>{await api('/api/start');$('msg').textContent='Run lancé.';await poll();});
 $('pause').addEventListener('click',async()=>{await api('/api/pause');$('msg').textContent='Pause.';await poll();});
 $('step').addEventListener('click',async()=>{await api('/api/step');$('msg').textContent='Un pas exécuté.';await poll();});
 $('reset').addEventListener('click',async()=>{await api('/api/reset');$('msg').textContent='Remis à zéro.';await poll();});
-
-buildMachine();
-poll();
-setInterval(poll,250);
+buildMachine();poll();setInterval(poll,250);
 </script>
 </body>
 </html>
