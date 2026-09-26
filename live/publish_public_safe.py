@@ -45,6 +45,8 @@ def canonical_payload(raw: dict) -> dict:
         "channels": raw.get("channels"),
         "trace_points": raw.get("trace_points"),
         "trace_total": raw.get("trace_total"),
+        "stage_exec_us": raw.get("stage_exec_us", 0.0),
+        "stage_work_ratio": raw.get("stage_work_ratio", 0.0),
         "public_values": raw.get("public_values", []),
         "public_values_total": raw.get("public_values_total", 0),
         "global_error": raw.get("global_error", {}),

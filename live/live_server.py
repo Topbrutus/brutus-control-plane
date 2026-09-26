@@ -123,24 +123,54 @@ def public_event(event: dict[str, object]) -> dict[str, object]:
     }
 
 
-def build_frames(x: Fraction, route_mode: str) -> list[list[Fraction]]:
+def build_frames_profiled(x: Fraction, route_mode: str) -> tuple[list[list[Fraction]], list[float]]:
+    timings_us = [0.0] * 7
+    frames: list[list[Fraction]] = [[x]]
+
+    t0 = time.perf_counter_ns()
     level1 = list(fanout3(x, Fraction(2, 7)))
+    timings_us[1] = (time.perf_counter_ns() - t0) / 1000.0
+    frames.append(level1)
+
+    t0 = time.perf_counter_ns()
     majors: list[Fraction] = []
     for i, parent in enumerate(level1):
         majors.extend(fanout3(parent, Fraction(i + 1, 11)))
+    timings_us[2] = (time.perf_counter_ns() - t0) / 1000.0
+    frames.append(majors)
 
+    t0 = time.perf_counter_ns()
     mirrors: list[Fraction] = []
-    local: list[Fraction] = []
+    routed_groups: list[tuple[Fraction, Fraction, Fraction, Fraction]] = []
     permutation = (0, 1, 2, 3) if route_mode == "identity" else (0, 2, 1, 3)
     for i, major in enumerate(majors):
         m = mirror4(major, Fraction(i + 1, 37))
         routed = route4(m, permutation)
+        routed_groups.append(routed)
         mirrors.extend(routed)
-        local.append(recombine4(routed))
+    timings_us[3] = (time.perf_counter_ns() - t0) / 1000.0
+    frames.append(mirrors)
 
+    t0 = time.perf_counter_ns()
+    local = [recombine4(routed) for routed in routed_groups]
+    timings_us[4] = (time.perf_counter_ns() - t0) / 1000.0
+    frames.append(local)
+
+    t0 = time.perf_counter_ns()
     level3 = [recombine3(local[i:i + 3]) for i in range(0, 9, 3)]
+    timings_us[5] = (time.perf_counter_ns() - t0) / 1000.0
+    frames.append(level3)
+
+    t0 = time.perf_counter_ns()
     output = [recombine3(level3)]
-    return [[x], level1, majors, mirrors, local, level3, output]
+    timings_us[6] = (time.perf_counter_ns() - t0) / 1000.0
+    frames.append(output)
+    return frames, timings_us
+
+
+def build_frames(x: Fraction, route_mode: str) -> list[list[Fraction]]:
+    frames, _ = build_frames_profiled(x, route_mode)
+    return frames
 STATE: dict[str, object] = {
     "input": "17/5",
     "route": "identity",
@@ -155,7 +185,7 @@ def snapshot() -> dict[str, object]:
         x = Fraction(str(STATE["input"]))
         route_mode = str(STATE["route"])
         index = int(STATE["index"])
-        frames = build_frames(x, route_mode)
+        frames, timings_us = build_frames_profiled(x, route_mode)
         frame = frames[index]
         output = frames[-1][0]
         f1 = f1_pell_rank_21_power(int(STATE["k"]))
@@ -166,6 +196,11 @@ def snapshot() -> dict[str, object]:
             "channels": len(frame),
             "trace_points": TRACE_COUNTS[index],
             "trace_total": 62,
+            "stage_exec_us": round(timings_us[index], 3),
+            "stage_work_ratio": round(
+                timings_us[index] / max(max(timings_us[1:]), 0.001) if index > 0 else 0.0,
+                6,
+            ),
             "route": route_mode,
             "input": frac_payload(x),
             "values": [frac_payload(v) for v in frame],
@@ -189,7 +224,7 @@ def public_snapshot() -> dict[str, object]:
         x = Fraction(str(STATE["input"]))
         route_mode = str(STATE["route"])
         index = int(STATE["index"])
-        frames = build_frames(x, route_mode)
+        frames, timings_us = build_frames_profiled(x, route_mode)
         frame = frames[index]
         output = frames[-1][0]
         f1 = f1_pell_rank_21_power(int(STATE["k"]))
@@ -203,6 +238,11 @@ def public_snapshot() -> dict[str, object]:
             "channels": len(frame),
             "trace_points": TRACE_COUNTS[index],
             "trace_total": 62,
+            "stage_exec_us": round(timings_us[index], 3),
+            "stage_work_ratio": round(
+                timings_us[index] / max(max(timings_us[1:]), 0.001) if index > 0 else 0.0,
+                6,
+            ),
             "public_values": [frac_payload(v) for v in frame[:12]],
             "public_values_total": len(frame),
             "global_error": frac_payload(output - x),
