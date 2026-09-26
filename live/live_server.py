@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import json
 import re
@@ -6,6 +6,7 @@ import sys
 import threading
 import time
 from collections import deque
+from concurrent.futures import ThreadPoolExecutor
 from fractions import Fraction
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -17,6 +18,7 @@ sys.path.insert(0, str(SRC))
 
 from z_stereo_formula_adapters import f1_pell_rank_21_power
 from z_stereo_ninefold import fanout3, mirror4, recombine3, recombine4, route4
+import publish_public_safe as zel_publisher
 
 HOST = "127.0.0.1"
 PORT = 8872
@@ -26,6 +28,7 @@ STOP = threading.Event()
 EVENTS: deque[dict[str, object]] = deque(maxlen=120)
 EVENT_SEQ = 0
 TRACE_COUNTS = [1, 4, 13, 49, 58, 61, 62]
+ZEL_EXECUTOR = ThreadPoolExecutor(max_workers=1, thread_name_prefix="zel-publish")
 
 PUBLIC_SECRET_PATTERNS = [
     re.compile(r"(?i)(authorization:\s*bearer\s+)[^\s]+"),
@@ -217,14 +220,33 @@ def public_snapshot() -> dict[str, object]:
         }
 
 
+def _publish_public_payload(payload: dict[str, object]) -> None:
+    try:
+        status = zel_publisher.publish(payload)
+        print(f"[ZEL-PUBLISH] http={status} stage={payload.get('stage')} trace={payload.get('trace_points')}/{payload.get('trace_total')}")
+    except Exception as exc:
+        print(f"[ZEL-PUBLISH] WARN {type(exc).__name__}")
+
+
+def queue_public_publish() -> None:
+    if not zel_publisher.TOKEN:
+        return
+    payload = zel_publisher.canonical_payload(public_snapshot())
+    ZEL_EXECUTOR.submit(_publish_public_payload, payload)
+
+
 def advance() -> None:
+    changed = False
     with LOCK:
         index = int(STATE["index"])
         if index < len(STAGE_NAMES) - 1:
             STATE["index"] = index + 1
+            changed = True
         else:
             STATE["status"] = "DONE"
             STOP.set()
+    if changed:
+        queue_public_publish()
 
 
 def runner() -> None:
@@ -243,6 +265,7 @@ def start_run() -> None:
         if int(STATE["index"]) >= len(STAGE_NAMES) - 1:
             STATE["index"] = 0
         STATE["status"] = "RUN"
+    queue_public_publish()
     STOP.clear()
     RUNNER = threading.Thread(target=runner, daemon=True)
     RUNNER.start()
@@ -260,6 +283,7 @@ def reset_run() -> None:
     with LOCK:
         STATE["index"] = 0
         STATE["status"] = "STOP"
+    queue_public_publish()
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -332,6 +356,7 @@ class Handler(BaseHTTPRequestHandler):
                     STATE["k"] = k
                 STATE["index"] = 0
                 STATE["status"] = "STOP"
+            queue_public_publish()
         else:
             self.send_error(404)
             return
@@ -345,6 +370,7 @@ def main() -> None:
     server = ThreadingHTTPServer((HOST, PORT), Handler)
     print(f"ANTMUX/BRUTUS LIVE: http://{HOST}:{PORT}")
     print("Ctrl+C pour arreter.")
+    queue_public_publish()
     try:
         server.serve_forever()
     except KeyboardInterrupt:
