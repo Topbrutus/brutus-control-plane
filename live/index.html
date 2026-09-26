@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ANTMUX / BRUTUS LIVE</title>
+<style>
+:root{color-scheme:dark;--bg:#080b10;--panel:#10161f;--line:#2a3442;--text:#eef4ff;--muted:#8fa0b5;--ok:#72e5a2;--bad:#ff7b86;--hot:#78b8ff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.4 system-ui,Segoe UI,sans-serif}
+main{max-width:1180px;margin:auto;padding:18px}.top{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+h1{font-size:20px;margin:0}.badge{border:1px solid var(--line);padding:6px 10px;border-radius:999px;color:var(--muted)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:14px}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+label{font-size:12px;color:var(--muted)}input,select,button{width:100%;margin-top:5px;padding:10px 12px;border-radius:9px;border:1px solid var(--line);background:#0b1017;color:var(--text);font:inherit}
+button{cursor:pointer}button:hover{border-color:var(--hot)}.buttons{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.machine{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;align-items:stretch}.stage{min-width:0;text-align:center;border:1px solid var(--line);border-radius:10px;padding:10px 6px;color:var(--muted)}
+.stage.active{border-color:var(--hot);color:var(--text);box-shadow:inset 0 0 0 1px var(--hot)}.stage.done{border-color:#3d7656;color:var(--ok)}
+.stage b{display:block;font-size:12px}.stage strong{display:block;font-size:22px;margin-top:5px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}.metric{border:1px solid var(--line);border-radius:10px;padding:12px}
+.metric span{display:block;color:var(--muted);font-size:12px}.metric strong{display:block;font-size:22px;margin-top:3px;overflow-wrap:anywhere}
+.values{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:7px;max-height:330px;overflow:auto}
+.value{border:1px solid var(--line);border-radius:9px;padding:8px;font-family:ui-monospace,Consolas,monospace}.value small{display:block;color:var(--muted)}
+.ok{color:var(--ok)}.bad{color:var(--bad)}#msg{color:var(--muted);font-size:13px;margin-top:8px}
+@media(max-width:760px){.machine{grid-template-columns:1fr 1fr}.buttons{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<main>
+  <div class="top">
+    <div>
+      <h1>ANTMUX / BRUTUS — VITRINE LIVE</h1>
+      <div id="subtitle" style="color:var(--muted);font-size:13px">Prototype local · trace visible · aucune donnée secrète</div>
+    </div>
+    <div class="badge" id="connection">CONNEXION…</div>
+  </div>
+
+  <section class="panel">
+    <div class="controls">
+      <label>Entrée X<input id="inputX" value="17/5"></label>
+      <label>Routage<select id="route"><option value="identity">IDENTITY</option><option value="cross">CROSS</option></select></label>
+      <label>Test F1 — k<input id="k" type="number" min="2" value="3"></label>
+      <label>&nbsp;<button id="apply">APPLIQUER</button></label>
+    </div>
+    <div class="buttons">
+      <button id="start">▶ RUN</button>
+      <button id="pause">⏸ PAUSE</button>
+      <button id="step">→ STEP</button>
+      <button id="reset">↻ RESET</button>
+    </div>
+    <div id="msg">Prêt.</div>
+  </section>
+
+  <section class="panel">
+    <div class="machine" id="machine"></div>
+  </section>
+
+  <section class="panel">
+    <div class="grid">
+      <div class="metric"><span>ÉTAGE</span><strong id="stage">—</strong></div>
+      <div class="metric"><span>CANAUX</span><strong id="channels">—</strong></div>
+      <div class="metric"><span>TRACE</span><strong id="trace">—</strong></div>
+      <div class="metric"><span>ERREUR GLOBALE</span><strong id="error">—</strong></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="grid">
+      <div class="metric"><span>F1 RÉEL · zP(21^k)</span><strong id="f1">—</strong></div>
+      <div class="metric"><span>FORMULE</span><strong id="formula" style="font-size:15px">—</strong></div>
+      <div class="metric"><span>SOURCE COMMIT</span><strong id="commit" style="font-size:13px">—</strong></div>
+    </div>
+  </section>
+  <section class="panel">
+    <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px">
+      <strong>Valeurs de l'étage</strong><span id="status" class="badge">STOP</span>
+    </div>
+    <div class="values" id="values"></div>
+  </section>
+</main>
+<script>
+const names=['ENTRÉE','Z1 1→3','F 3→9','Z MIROIR 9→36','CHECK 36→9','RECOMB 9→3','SORTIE 3→1'];
+const counts=[1,3,9,36,9,3,1];
+const $=id=>document.getElementById(id);
+let latest=null;
+
+function buildMachine(){
+  $('machine').innerHTML='';
+  names.forEach((n,i)=>{
+    const d=document.createElement('div');
+    d.className='stage'; d.dataset.i=i;
+    d.innerHTML='<b>'+n+'</b><strong>'+counts[i]+'</strong>';
+    $('machine').appendChild(d);
+  });
+}
+
+async function api(path,body){
+  const opt={method:'POST',headers:{'Content-Type':'application/json'}};
+  if(body!==undefined) opt.body=JSON.stringify(body);
+  const r=await fetch(path,opt);
+  if(!r.ok) throw new Error(await r.text());
+  return r.json();
+}
+
+function render(s){
+  latest=s;
+  $('connection').textContent='LOCAL LIVE';
+  $('connection').className='badge ok';
+  $('stage').textContent=s.stage;
+  $('channels').textContent=s.channels;
+  $('trace').textContent=s.trace_points+' / '+s.trace_total;
+  $('status').textContent=s.status;
+  $('f1').textContent=s.f1.value+'  (k='+s.f1.k+')';
+  $('formula').textContent=s.f1.formula;
+  $('commit').textContent=s.f1.source_commit.slice(0,12)+'…';
+  const e=s.global_error;
+  $('error').textContent=e.exact+'  ≈ '+Number(e.decimal).toPrecision(6);
+  $('error').className=Math.abs(e.decimal)<1e-12?'ok':'bad';
+
+  document.querySelectorAll('.stage').forEach((el,i)=>{
+    el.classList.toggle('active',i===s.stage_index);
+    el.classList.toggle('done',i<s.stage_index);
+  });
+
+  $('values').innerHTML='';
+  s.values.forEach((v,i)=>{
+    const d=document.createElement('div');
+    d.className='value';
+    d.innerHTML='<small>CANAL '+String(i+1).padStart(2,'0')+'</small>'+v.exact+'<small>'+Number(v.decimal).toPrecision(9)+'</small>';
+    $('values').appendChild(d);
+  });
+}
+
+async function poll(){
+  try{
+    const r=await fetch('/api/state',{cache:'no-store'});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    render(await r.json());
+  }catch(err){
+    $('connection').textContent='HORS LIGNE';
+    $('connection').className='badge bad';
+    $('msg').textContent='Serveur indisponible: '+err.message;
+  }
+}
+
+$('apply').addEventListener('click',async()=>{
+  try{
+    await api('/api/config',{input:$('inputX').value,route:$('route').value,k:Number($('k').value)});
+    $('msg').textContent='Configuration appliquée.';
+    await poll();
+  }catch(e){$('msg').textContent='Erreur config: '+e.message;}
+});
+$('start').addEventListener('click',async()=>{await api('/api/start');$('msg').textContent='Run lancé.';await poll();});
+$('pause').addEventListener('click',async()=>{await api('/api/pause');$('msg').textContent='Pause.';await poll();});
+$('step').addEventListener('click',async()=>{await api('/api/step');$('msg').textContent='Un pas exécuté.';await poll();});
+$('reset').addEventListener('click',async()=>{await api('/api/reset');$('msg').textContent='Remis à zéro.';await poll();});
+
+buildMachine();
+poll();
+setInterval(poll,250);
+</script>
+</body>
+</html>
