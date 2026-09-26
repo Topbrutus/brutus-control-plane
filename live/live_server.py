@@ -4,6 +4,7 @@ import json
 import sys
 import threading
 import time
+from collections import deque
 from fractions import Fraction
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -21,6 +22,8 @@ PORT = 8872
 LOCK = threading.Lock()
 RUNNER: threading.Thread | None = None
 STOP = threading.Event()
+EVENTS: deque[dict[str, object]] = deque(maxlen=120)
+EVENT_SEQ = 0
 TRACE_COUNTS = [1, 4, 13, 49, 58, 61, 62]
 STAGE_NAMES = [
     "ENTREE", "Z1 1->3", "F 3->9", "Z MIROIR 9->36",
@@ -30,6 +33,23 @@ STAGE_NAMES = [
 
 def frac_payload(value: Fraction) -> dict[str, object]:
     return {"exact": str(value), "decimal": float(value)}
+
+
+def emit_event(kind: str, label: str, detail: str = "", status: str = "INFO", source: str = "CONTROL_PLANE") -> dict[str, object]:
+    global EVENT_SEQ
+    with LOCK:
+        EVENT_SEQ += 1
+        event = {
+            "seq": EVENT_SEQ,
+            "timestamp": time.time(),
+            "source": str(source)[:40],
+            "kind": str(kind)[:40],
+            "label": str(label)[:160],
+            "detail": str(detail)[:600],
+            "status": str(status)[:24],
+        }
+        EVENTS.append(event)
+        return dict(event)
 
 
 def build_frames(x: Fraction, route_mode: str) -> list[list[Fraction]]:
@@ -87,6 +107,8 @@ def snapshot() -> dict[str, object]:
                 "formula": "z_P(21^k)=4*21^(k-1)",
                 "source_commit": f1.source_commit,
             },
+            "events": list(EVENTS)[-40:],
+            "event_seq": EVENT_SEQ,
             "timestamp": time.time(),
         }
 
@@ -176,6 +198,16 @@ class Handler(BaseHTTPRequestHandler):
             advance()
         elif path == "/api/reset":
             reset_run()
+        elif path == "/api/event":
+            event = emit_event(
+                kind=data.get("kind", "EVENT"),
+                label=data.get("label", "event"),
+                detail=data.get("detail", ""),
+                status=data.get("status", "INFO"),
+                source=data.get("source", "ASTRA"),
+            )
+            self.send_json({"accepted": True, "event": event})
+            return
         elif path == "/api/config":
             pause_run()
             with LOCK:
