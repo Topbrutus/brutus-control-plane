@@ -1,0 +1,134 @@
+{
+  "version": "0.1-candidate",
+  "bank_id": "Z-STEREO-FORMULA-BANK-2026-09-26",
+  "status": "CANDIDATE",
+  "purpose": "Pin nine major formula slots to exact source repositories and commits for the Z-stereo ninefold experiment.",
+  "recombination_ready": false,
+  "normalization_required": true,
+  "normalization_note": "The nine formulas do not share a common input/output type. Z routing must carry typed envelopes and an explicit normalization contract before any 9->3->1 numerical recombination is considered meaningful.",
+  "slots": [
+    {
+      "slot": "F1",
+      "name": "Pell rank family",
+      "formula": "z_P(21^k) = 4*21^(k-1), k >= 2",
+      "input_contract": "integer exponent k >= 2",
+      "output_contract": "positive integer rank of apparition",
+      "status": "explicit corollary of classical Pell/Lucas rank-lifting results",
+      "source_repo": "Topbrutus/brutus-pell-square-rank-relation",
+      "source_commit": "aa08bd336662dea0b6c836c273cf7f7d59f4a672",
+      "source_path": "README.md",
+      "adapter_path": "src/z_stereo_formula_adapters.py",
+      "integration_status": "SMOKE_TESTED",
+      "integration_test": {
+        "tested_inputs": "k=2..8",
+        "expected_outputs": [
+          84,
+          1764,
+          37044,
+          777924,
+          16336404,
+          343064484,
+          7204354164
+        ],
+        "test_file": "tests/test_z_stereo_formula_adapters.py",
+        "result": "4/4 PASS",
+        "note": "Adapter/provenance integration test only; not independent mathematical proof."
+      }
+    },
+    {
+      "slot": "F2",
+      "name": "Pell odd-exponent square specialization",
+      "formula": "z_P(21^(2r+1)) = (2*21^r)^2, r >= 1",
+      "input_contract": "integer r >= 1",
+      "output_contract": "perfect-square positive integer rank",
+      "status": "specialization of F1; not an independent proof channel",
+      "source_repo": "Topbrutus/brutus-pell-square-rank-relation",
+      "source_commit": "aa08bd336662dea0b6c836c273cf7f7d59f4a672",
+      "source_path": "README.md"
+    },
+    {
+      "slot": "F3",
+      "name": "Connected-spectrum sample generator",
+      "formula": "S_Q(u) = E[prod_q(1 + u Z_q)]",
+      "input_contract": "finite empirical Brutus-Pell sample, cutoff Q, scalar/formal u, centered normalized Z_q",
+      "output_contract": "finite-sample generating quantity S_Q(u)",
+      "status": "finite-sample definition",
+      "source_repo": "Topbrutus/brutus-pell-connected-spectrum",
+      "source_commit": "711d5b6a0f4789149bd3edf4ecfc485da0f9f512",
+      "source_path": "study/BRUTUS_PELL_CONNECTED_SPECTRUM.md"
+    },
+    {
+      "slot": "F4",
+      "name": "Connected logarithmic generator",
+      "formula": "K_Q(u) = log(S_Q(u)) - sum_{q<r} log(1 + p_qr*u^2)",
+      "input_contract": "S_Q(u) plus complete finite-sample pair moments p_qr = E[Z_q Z_r]",
+      "output_contract": "connected logarithmic generator K_Q(u)",
+      "status": "finite-sample definition",
+      "source_repo": "Topbrutus/brutus-pell-connected-spectrum",
+      "source_commit": "711d5b6a0f4789149bd3edf4ecfc485da0f9f512",
+      "source_path": "study/BRUTUS_PELL_CONNECTED_SPECTRUM.md"
+    },
+    {
+      "slot": "F5",
+      "name": "Connected coefficient K3",
+      "formula": "K3 = T3",
+      "input_contract": "finite-sample elementary coefficient T3",
+      "output_contract": "connected cubic coefficient K3",
+      "status": "coefficient identity inside the archived finite-sample expansion",
+      "source_repo": "Topbrutus/brutus-pell-connected-spectrum",
+      "source_commit": "711d5b6a0f4789149bd3edf4ecfc485da0f9f512",
+      "source_path": "study/BRUTUS_PELL_CONNECTED_SPECTRUM.md"
+    },
+    {
+      "slot": "F6",
+      "name": "Connected coefficient K4",
+      "formula": "K4 = T4 - T2^2/2 + (1/2)*sum_{q<r}(p_qr^2)",
+      "input_contract": "finite-sample T2, T4 and complete pair moments p_qr",
+      "output_contract": "connected quartic coefficient K4",
+      "status": "coefficient identity inside the archived finite-sample expansion",
+      "source_repo": "Topbrutus/brutus-pell-connected-spectrum",
+      "source_commit": "711d5b6a0f4789149bd3edf4ecfc485da0f9f512",
+      "source_path": "study/BRUTUS_PELL_CONNECTED_SPECTRUM.md"
+    },
+    {
+      "slot": "F7",
+      "name": "Connected coefficient K5",
+      "formula": "K5 = T5 - T2*T3",
+      "input_contract": "finite-sample T2, T3 and T5",
+      "output_contract": "connected quintic coefficient K5",
+      "status": "coefficient identity inside the archived finite-sample expansion",
+      "source_repo": "Topbrutus/brutus-pell-connected-spectrum",
+      "source_commit": "711d5b6a0f4789149bd3edf4ecfc485da0f9f512",
+      "source_path": "study/BRUTUS_PELL_CONNECTED_SPECTRUM.md"
+    },
+    {
+      "slot": "F8",
+      "name": "Connected coefficient K6",
+      "formula": "K6 = T6 - T2*T4 - T3^2/2 + T2^3/3 - (1/3)*sum_{q<r}(p_qr^3)",
+      "input_contract": "finite-sample T2, T3, T4, T6 and complete pair moments p_qr",
+      "output_contract": "connected sextic coefficient K6",
+      "status": "coefficient identity inside the archived finite-sample expansion",
+      "source_repo": "Topbrutus/brutus-pell-connected-spectrum",
+      "source_commit": "711d5b6a0f4789149bd3edf4ecfc485da0f9f512",
+      "source_path": "study/BRUTUS_PELL_CONNECTED_SPECTRUM.md"
+    },
+    {
+      "slot": "F9",
+      "name": "Brutus frozen V1 numerical relation",
+      "formula": "((300000000 - 299792458)/300000000) * (1/(3*10^18)) * (1 - pi/100)",
+      "input_contract": "frozen constants exactly as declared in V1",
+      "output_contract": "dimensionless numerical value unless an external unit convention is explicitly supplied",
+      "status": "reproducible frozen candidate relation; physical interpretation not established",
+      "source_repo": "Topbrutus/boson-de-brutus",
+      "source_commit": "3b0e6d33a3ee745f08f67e845b2a1818f1328f74",
+      "source_path": "FORMULE-FIGEE-2026-09-19.md",
+      "zenodo_doi": "10.5281/zenodo.22927791"
+    }
+  ],
+  "guardrails": [
+    "F2 is mathematically dependent on F1 and must not be counted as independent verification.",
+    "F3 through F8 share the same connected-spectrum source family and must not be counted as independent proofs of one another.",
+    "F9 numerical reproducibility does not establish the proposed physical interpretation.",
+    "No common scalar recombination is authorized until typed normalization rules are declared and tested."
+  ]
+}

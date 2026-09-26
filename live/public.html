@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ANTMUX / BRUTUS — Public Safe Live</title>
+<style>
+:root{color-scheme:dark;--bg:#020407;--steel:#6f757b;--panel:#070b10;--text:#edf4ff;--muted:#98a5b3;--cyan:#5fc6ff;--green:#32e7a4;--gold:#ffb31f;--red:#ff5454}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#020407;color:var(--text);font:16px/1.35 "Segoe UI",system-ui,sans-serif}
+body{background:radial-gradient(circle at 50% -20%,rgba(0,117,255,.1),transparent 34%),linear-gradient(180deg,#05080c,#020407 65%)}
+main{max-width:1180px;margin:auto;padding:12px}
+.label{margin:8px 0 4px 2px;color:#cbd3db;font-weight:800;font-size:12px;letter-spacing:.06em}
+.rack{position:relative;padding:13px;border-radius:12px;margin-bottom:10px;border:1px solid #1e242a;background:repeating-linear-gradient(90deg,rgba(255,255,255,.028) 0 1px,rgba(0,0,0,.02) 1px 3px),linear-gradient(180deg,#777d83,#4e5459 12%,#8c9297 48%,#4a5055 92%,#747a80);box-shadow:inset 0 1px 0 #d2d6da,inset 0 -1px 0 #25292d,0 4px 10px rgba(0,0,0,.45)}
+.rack:before,.rack:after{content:"";position:absolute;top:8px;width:9px;height:9px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#eef0f2 0 12%,#757c82 16% 36%,#171a1d 43% 56%,#92989d 61% 72%,#23282c 75%)}
+.rack:before{left:8px}.rack:after{right:8px}
+.face{background:linear-gradient(180deg,#0c1218,#05090d);border:1px solid #06090c;border-radius:8px;box-shadow:inset 0 0 0 1px #29313a,inset 0 2px 7px #000,0 1px 0 rgba(255,255,255,.22)}
+.top{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:12px 15px}.top h1{margin:0;font-size:21px;letter-spacing:.04em}.top small{display:block;color:#a7b2bd;margin-top:2px;font-size:12px}
+.live{padding:8px 13px;border-radius:999px;color:#9cffd8;border:1px solid #34e8aa;background:#07130f;white-space:nowrap}
+.mode{color:#65c8ff}.safe{color:#d38cff}
+.stages{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}.stage{padding:10px 5px;text-align:center;background:linear-gradient(180deg,#090e13,#04080c);border:1px solid #0b0f13;border-radius:8px;box-shadow:inset 0 0 0 1px #303842,inset 0 2px 6px #000}.stage b{display:block;font-size:10px;color:#cbd4df}.stage strong{display:block;margin-top:4px;color:#62c0ff;font:800 22px/1 ui-monospace,Consolas,monospace}.stage.active{border-color:#58d9ff;box-shadow:inset 0 0 0 1px #58d9ff,inset 0 2px 6px #000,0 0 13px rgba(55,192,255,.28)}.stage.done strong{color:#83eebc}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.metric,.formula{padding:11px 12px;min-height:72px}.metric span,.formula span{display:block;color:#aeb7c2;font-size:10px}.metric strong,.formula strong{display:block;margin-top:5px;font:800 21px/1.05 ui-monospace,Consolas,monospace;overflow-wrap:anywhere}
+#stage{color:var(--gold)}#channels,#trace{color:var(--cyan)}#error{color:var(--red)}
+.formulas{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.formula strong{font-size:16px;color:#72e2bc}.formula:first-child strong{color:#69bcff}
+.values{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:7px}.value{padding:8px 9px;border-radius:7px;background:#05090d;border:1px solid #17202a;box-shadow:inset 0 1px 4px #000;font:700 14px/1.25 ui-monospace,Consolas,monospace;color:#ff665c}.value small{display:block;color:#a5b1be;font:10px/1.2 ui-monospace,Consolas,monospace}
+.events{max-height:330px;overflow:auto;background:#02070a;border:1px solid #101820;border-radius:8px;padding:7px;box-shadow:inset 0 0 14px #000}.event{padding:6px 9px;border-left:3px solid #ffb113;border-bottom:1px solid #10171c;font:12px/1.35 ui-monospace,Consolas,monospace}.event small{display:block;color:#d6a42c}.event code{color:#67c4ff;white-space:pre-wrap}.event.pass{border-left-color:#31e69f}.event.fail{border-left-color:#ff4a4a}.event.pass small{color:#6de2b2}.event.fail small{color:#ff7b7b}
+.note{color:#b7c1cb;font-size:12px}.offline{color:#ff7777}
+@media(max-width:850px){.stages{grid-template-columns:repeat(4,1fr)}.metrics{grid-template-columns:1fr 1fr}.formulas{grid-template-columns:1fr}}
+@media(max-width:520px){.stages,.metrics{grid-template-columns:1fr 1fr}.top{align-items:flex-start}.top h1{font-size:17px}}
+</style>
+</head>
+<body>
+<main>
+<div class="label">01 · PUBLIC SAFE</div>
+<section class="rack"><div class="face top"><div><h1>ANTMUX / BRUTUS — <span class="mode">VITRINE</span> <span class="safe">PUBLIQUE</span></h1><small>Lecture seule · données filtrées · commandes privées non exposées</small></div><div id="live" class="live">CONNEXION…</div></div></section>
+<div class="label">02 · PIPELINE</div>
+<section class="rack"><div id="stages" class="stages"></div></section>
+
+<div class="label">03 · ÉTAT</div>
+<section class="rack"><div class="metrics">
+<div class="face metric"><span>ÉTAGE</span><strong id="stage">—</strong></div>
+<div class="face metric"><span>CANAUX</span><strong id="channels">—</strong></div>
+<div class="face metric"><span>TRACE</span><strong id="trace">—</strong></div>
+<div class="face metric"><span>ERREUR GLOBALE</span><strong id="error">—</strong></div>
+</div></section>
+
+<div class="label">04 · FORMULE PUBLIQUE</div>
+<section class="rack"><div class="formulas">
+<div class="face formula"><span>FORMULE ACTIVE</span><strong id="f1">—</strong></div>
+<div class="face formula"><span>RELATION</span><strong id="formula">—</strong></div>
+<div class="face formula"><span>SOURCE</span><strong id="commit">—</strong></div>
+</div></section>
+
+<div class="label">05 · VALEURS PUBLIQUES</div>
+<section class="rack"><div id="valueNote" class="note">Valeurs autorisées du calcul courant.</div><div id="values" class="values" style="margin-top:8px"></div></section>
+
+<div class="label">06 · ACTIVITÉ PUBLIQUE</div>
+<section class="rack"><div class="note" style="margin-bottom:8px">Résumé filtré des validations. Aucun chemin local, commande brute, token ou secret n’est publié.</div><div id="events" class="events"></div></section>
+</main>
+<script>
+const names=['ENTRÉE','Z1 1→3','F 3→9','Z MIROIR 9→36','CHECK 36→9','RECOMB 9→3','SORTIE 3→1'];
+const counts=[1,3,9,36,9,3,1];
+const $=id=>document.getElementById(id);
+function buildStages(){const host=$('stages');host.innerHTML='';names.forEach((n,i)=>{const d=document.createElement('div');d.className='stage';d.dataset.i=i;d.innerHTML='<b>'+n+'</b><strong>'+counts[i]+'</strong>';host.appendChild(d);});}
+function render(s){
+  $('live').textContent=s.status==='OFFLINE'?'HORS LIGNE':'PUBLIC LIVE';
+  $('live').className='live'+(s.status==='OFFLINE'?' offline':'');
+  if(s.status==='OFFLINE')return;
+  $('stage').textContent=s.stage;$('channels').textContent=s.channels;$('trace').textContent=s.trace_points+' / '+s.trace_total;
+  $('error').textContent=s.global_error.exact+' ≈ '+Number(s.global_error.decimal).toPrecision(6);
+  $('f1').textContent=s.f1.formula_id+' · '+s.f1.value+' (k='+s.f1.k+')';$('formula').textContent=s.f1.formula;$('commit').textContent=s.f1.source_commit_short+'…';
+  document.querySelectorAll('.stage').forEach((el,i)=>{el.classList.toggle('active',i===s.stage_index);el.classList.toggle('done',i<s.stage_index);});
+  $('values').innerHTML='';(s.public_values||[]).forEach((v,i)=>{const d=document.createElement('div');d.className='value';d.innerHTML='<small>CANAL '+String(i+1).padStart(2,'0')+'</small>'+v.exact+'<small>'+Number(v.decimal).toPrecision(9)+'</small>';$('values').appendChild(d);});
+  $('valueNote').textContent=(s.public_values_total||0)+' valeur(s) dans cet étage · '+(s.public_values||[]).length+' affichée(s) publiquement.';
+  $('events').innerHTML='';const evs=(s.events||[]).slice().reverse();if(!evs.length){$('events').innerHTML='<div class="event"><small>EN ATTENTE</small><code>Aucune activité publique pour le moment.</code></div>';}else{evs.forEach(ev=>{const d=document.createElement('div');const st=String(ev.status||'').toLowerCase();d.className='event '+(st==='pass'?'pass':st==='fail'?'fail':'');const sm=document.createElement('small');sm.textContent='#'+ev.seq+' · '+new Date(ev.timestamp*1000).toLocaleTimeString('fr-CA',{hour12:false})+' · '+ev.source+' · '+ev.kind+' · '+ev.status;const code=document.createElement('code');code.textContent=ev.label+(ev.detail?' — '+ev.detail:'');d.appendChild(sm);d.appendChild(code);$('events').appendChild(d);});}
+}
+async function poll(){try{const r=await fetch('/api/state',{cache:'no-store'});const s=await r.json();render(s);}catch(e){render({status:'OFFLINE'});}}
+buildStages();poll();setInterval(poll,500);
+</script>
+</body>
+</html>

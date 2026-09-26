@@ -1,0 +1,38 @@
+{
+  "run_id": "BRUTUS-RUN://Z-STEREO-F1/2026-09-26/000001",
+  "family": "Z-STEREO-NINEFOLD",
+  "status": "OBSERVATION",
+  "source": {
+    "repo": "Topbrutus/brutus-control-plane",
+    "branch": "astra/z-stereo-ninefold-candidate",
+    "adapter_commit": "1f4b0df2dcc15453e52a8f77b46a4f149ec011d9",
+    "registry_commit": "a0f28f9e3f81800f7a57c963299602287bb09475"
+  },
+  "compute": {
+    "deterministic": true,
+    "algorithm_id": "F1-pell-rank-adapter-v0.1",
+    "formula": "z_P(21^k) = 4*21^(k-1), k >= 2",
+    "typed_output": "pell_rank_integer",
+    "normalization_applied": false,
+    "global_recombination_executed": false
+  },
+  "verification": {
+    "primary": true,
+    "mirror": true,
+    "countertest": true,
+    "precision_audit": false,
+    "independent_algorithm": false
+  },
+  "evidence": {
+    "adapter_blob_sha": "ef6235be45cef85044adec2473ba97cf83b4f9ac",
+    "test_blob_sha": "8b740c5dec82e70ee7eea1063d6d53c7885490db",
+    "registry_blob_sha_before_mark": "6d2796d6890a7ea48c2657f52a4d6189c2192abc",
+    "test_result": "4/4 PASS",
+    "tested_inputs": [2,3,4,5,6,7,8],
+    "tested_outputs": [84,1764,37044,777924,16336404,343064484,7204354164],
+    "k3_square_check": "1764 = 42^2",
+    "provenance_check": "PASS",
+    "invalid_input_checks": "PASS",
+    "scope": "F1 typed adapter and registry provenance only. No scientific independence claim and no 9->3->1 normalization/recombination."
+  }
+}
